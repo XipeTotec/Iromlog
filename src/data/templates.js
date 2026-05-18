@@ -1,0 +1,75 @@
+export const DEFAULT_TEMPLATES = [
+  {
+    id: 'push-a',
+    name: 'Push A',
+    type: 'push',
+    exercises: [
+      { exerciseId: 'incline-bench-press', defaultSets: 3, defaultReps: 10 },
+      { exerciseId: 'db-shoulder-press', defaultSets: 3, defaultReps: 10 },
+      { exerciseId: 'cable-lateral-raise', defaultSets: 3, defaultReps: 15 },
+      { exerciseId: 'tricep-pushdown', defaultSets: 3, defaultReps: 12 },
+      { exerciseId: 'overhead-extension', defaultSets: 3, defaultReps: 12 },
+    ],
+  },
+  {
+    id: 'push-b',
+    name: 'Push B',
+    type: 'push',
+    exercises: [
+      { exerciseId: 'bench-press', defaultSets: 3, defaultReps: 8 },
+      { exerciseId: 'ohp', defaultSets: 3, defaultReps: 8 },
+      { exerciseId: 'lateral-raise', defaultSets: 3, defaultReps: 15 },
+      { exerciseId: 'skull-crusher', defaultSets: 3, defaultReps: 10 },
+      { exerciseId: 'dips', defaultSets: 3, defaultReps: 10 },
+    ],
+  },
+  {
+    id: 'pull',
+    name: 'Pull',
+    type: 'pull',
+    exercises: [
+      { exerciseId: 'lat-pulldown', defaultSets: 3, defaultReps: 10 },
+      { exerciseId: 'seated-cable-row', defaultSets: 3, defaultReps: 10 },
+      { exerciseId: 'face-pull', defaultSets: 3, defaultReps: 15 },
+      { exerciseId: 'barbell-curl', defaultSets: 3, defaultReps: 10 },
+      { exerciseId: 'hammer-curl', defaultSets: 3, defaultReps: 12 },
+    ],
+  },
+  {
+    id: 'legs',
+    name: 'Legs',
+    type: 'legs',
+    exercises: [
+      { exerciseId: 'squat', defaultSets: 3, defaultReps: 8 },
+      { exerciseId: 'romanian-deadlift', defaultSets: 3, defaultReps: 8 },
+      { exerciseId: 'leg-press', defaultSets: 3, defaultReps: 12 },
+      { exerciseId: 'leg-curl', defaultSets: 3, defaultReps: 12 },
+      { exerciseId: 'calf-raise', defaultSets: 3, defaultReps: 15 },
+    ],
+  },
+  {
+    id: 'upper',
+    name: 'Upper',
+    type: 'upper',
+    exercises: [
+      { exerciseId: 'bench-press', defaultSets: 3, defaultReps: 8 },
+      { exerciseId: 'db-row', defaultSets: 3, defaultReps: 10 },
+      { exerciseId: 'ohp', defaultSets: 3, defaultReps: 8 },
+      { exerciseId: 'lat-pulldown', defaultSets: 3, defaultReps: 10 },
+      { exerciseId: 'barbell-curl', defaultSets: 3, defaultReps: 10 },
+      { exerciseId: 'tricep-pushdown', defaultSets: 3, defaultReps: 12 },
+    ],
+  },
+  {
+    id: 'lower',
+    name: 'Lower',
+    type: 'lower',
+    exercises: [
+      { exerciseId: 'squat', defaultSets: 3, defaultReps: 8 },
+      { exerciseId: 'deadlift', defaultSets: 3, defaultReps: 5 },
+      { exerciseId: 'leg-press', defaultSets: 3, defaultReps: 12 },
+      { exerciseId: 'leg-curl', defaultSets: 3, defaultReps: 12 },
+      { exerciseId: 'leg-extension', defaultSets: 3, defaultReps: 12 },
+    ],
+  },
+];
