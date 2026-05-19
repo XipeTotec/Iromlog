@@ -1,48 +1,54 @@
 const BASE = 'https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises';
+const DB_URL = 'https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/dist/exercises.json';
+const DB_CACHE_KEY = 'il_exercise_db_v1';
+const IMG_CACHE_KEY = 'il_exercise_img_v1';
 
-// Maps our exercise IDs → image URL from the free public exercise DB (no auth needed)
-export const EXERCISE_IMAGES = {
-  'bench-press':         `${BASE}/Barbell_Bench_Press_-_Medium_Grip/0.jpg`,
-  'incline-bench-press': `${BASE}/Barbell_Incline_Bench_Press_-_Medium_Grip/0.jpg`,
-  'incline-db-press':    `${BASE}/Dumbbell_Incline_Bench_Press/0.jpg`,
-  'cable-fly':           `${BASE}/Cable_Fly/0.jpg`,
-  'pec-deck':            `${BASE}/Lever_Pec_Deck_Fly/0.jpg`,
-  'push-up':             `${BASE}/Push-Up/0.jpg`,
+async function loadDb() {
+  const cached = localStorage.getItem(DB_CACHE_KEY);
+  if (cached) return JSON.parse(cached);
 
-  'deadlift':            `${BASE}/Barbell_Deadlift/0.jpg`,
-  'pull-up':             `${BASE}/Pull-up/0.jpg`,
-  'lat-pulldown':        `${BASE}/Cable_Lat_Pulldown/0.jpg`,
-  'seated-cable-row':    `${BASE}/Cable_Seated_Row/0.jpg`,
-  'db-row':              `${BASE}/Dumbbell_One-Arm_Row/0.jpg`,
-  'face-pull':           `${BASE}/Cable_Face_Pull/0.jpg`,
+  const res = await fetch(DB_URL);
+  const data = await res.json();
+  // Store only name + first image to stay well within localStorage limits
+  const slim = data
+    .filter(ex => ex.images?.length)
+    .map(ex => ({ name: ex.name.toLowerCase(), img: ex.images[0] }));
+  localStorage.setItem(DB_CACHE_KEY, JSON.stringify(slim));
+  return slim;
+}
 
-  'ohp':                 `${BASE}/Barbell_Shoulder_Press/0.jpg`,
-  'db-shoulder-press':   `${BASE}/Dumbbell_Shoulder_Press/0.jpg`,
-  'lateral-raise':       `${BASE}/Dumbbell_Lateral_Raise/0.jpg`,
-  'cable-lateral-raise': `${BASE}/Cable_Side_Lateral_Raise/0.jpg`,
-  'rear-delt-fly':       `${BASE}/Dumbbell_Bent-Over_Lateral_Raise/0.jpg`,
+function bestMatch(db, searchName) {
+  const terms = searchName.toLowerCase().replace(/[-_]/g, ' ').split(/\s+/).filter(Boolean);
 
-  'barbell-curl':        `${BASE}/Barbell_Curl/0.jpg`,
-  'db-curl':             `${BASE}/Dumbbell_Alternate_Bicep_Curl/0.jpg`,
-  'hammer-curl':         `${BASE}/Dumbbell_Hammer_Curl/0.jpg`,
-  'cable-curl':          `${BASE}/Cable_Hammer_Curls_-_Rope_Attachment/0.jpg`,
-  'preacher-curl':       `${BASE}/Barbell_Preacher_Curl/0.jpg`,
+  let best = null;
+  let bestScore = 0;
 
-  'tricep-pushdown':     `${BASE}/Pushdown/0.jpg`,
-  'skull-crusher':       `${BASE}/EZ-Bar_Skullcrusher/0.jpg`,
-  'overhead-extension':  `${BASE}/Dumbbell_Seated_Triceps_Extension/0.jpg`,
-  'close-grip-bench':    `${BASE}/Close-Grip_Barbell_Bench_Press/0.jpg`,
-  'dips':                `${BASE}/Dips_-_Triceps_Version/0.jpg`,
+  for (const ex of db) {
+    const name = ex.name.replace(/[-_]/g, ' ');
+    const hits = terms.filter(t => name.includes(t)).length;
+    if (hits > bestScore) { bestScore = hits; best = ex; }
+  }
 
-  'squat':               `${BASE}/Barbell_Full_Squat/0.jpg`,
-  'leg-press':           `${BASE}/Leg_Press/0.jpg`,
-  'romanian-deadlift':   `${BASE}/Romanian_Deadlift/0.jpg`,
-  'leg-curl':            `${BASE}/Leg_Curl/0.jpg`,
-  'leg-extension':       `${BASE}/Leg_Extensions/0.jpg`,
-  'calf-raise':          `${BASE}/Standing_Calf_Raises/0.jpg`,
+  return bestScore > 0 ? best : null;
+}
 
-  'plank':               `${BASE}/Plank/0.jpg`,
-  'cable-crunch':        `${BASE}/Cable_Crunch/0.jpg`,
-  'leg-raise':           `${BASE}/Lying_Leg_Raise/0.jpg`,
-  'ab-wheel':            `${BASE}/Ab_Roller/0.jpg`,
-};
+export async function fetchExerciseImage(exerciseId, apiName) {
+  const imgCache = JSON.parse(localStorage.getItem(IMG_CACHE_KEY) || '{}');
+  if (imgCache[exerciseId] !== undefined) return imgCache[exerciseId];
+
+  try {
+    const db = await loadDb();
+    const match = bestMatch(db, apiName || exerciseId.replace(/-/g, ' '));
+    const url = match ? `${BASE}/${match.img}` : null;
+    imgCache[exerciseId] = url;
+    localStorage.setItem(IMG_CACHE_KEY, JSON.stringify(imgCache));
+    return url;
+  } catch {
+    return null;
+  }
+}
+
+export function clearExerciseImageCache() {
+  localStorage.removeItem(DB_CACHE_KEY);
+  localStorage.removeItem(IMG_CACHE_KEY);
+}

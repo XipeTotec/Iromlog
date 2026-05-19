@@ -5,6 +5,7 @@ import {
 } from 'recharts';
 import { Trash2, Key, RefreshCw } from 'lucide-react';
 import { getApiKey, saveApiKey, clearGifCache } from '../data/exerciseApi.js';
+import { clearExerciseImageCache } from '../data/exerciseImages.js';
 import {
   getSessions,
   getExercises,
@@ -398,7 +399,7 @@ export default function Stats() {
               GIF Cache
             </label>
             <button
-              onClick={() => { clearGifCache(); alert('GIF cache cleared — tap ▶ again to re-fetch.'); }}
+              onClick={() => { clearGifCache(); clearExerciseImageCache(); alert('Image cache cleared.'); }}
               className="w-full mb-3 border border-border rounded py-2 font-heading text-base tracking-wider text-muted hover:text-white hover:border-white transition-colors"
             >
               CLEAR GIF CACHE
