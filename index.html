@@ -8,9 +8,17 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="IRON LOG" />
     <meta name="description" content="IRON LOG - Your personal fitness tracking app" />
-    <link rel="manifest" href="/Iron-log/manifest.json" />
-    <link rel="icon" type="image/svg+xml" href="/Iron-log/icon.svg" />
-    <link rel="apple-touch-icon" href="/Iron-log/icon.svg" />
+    <link rel="manifest" href="/Iromlog/manifest.json" />
+    <link rel="icon" type="image/svg+xml" href="/Iromlog/icon.svg" />
+    <link rel="apple-touch-icon" href="/Iromlog/icon.svg" />
+    <script>
+      // Restore route after GitHub Pages 404 redirect
+      var redirect = sessionStorage.getItem('spa_redirect');
+      if (redirect) {
+        sessionStorage.removeItem('spa_redirect');
+        history.replaceState(null, null, '/Iromlog' + redirect);
+      }
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
