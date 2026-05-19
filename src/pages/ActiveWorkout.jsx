@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { X, Check, Plus, ChevronDown, PlayCircle } from 'lucide-react';
-import { fetchExerciseGif, getApiKey } from '../data/exerciseApi.js';
+import { EXERCISE_IMAGES } from '../data/exerciseImages.js';
 import { useStopwatch, useRestTimer, formatTime } from '../hooks/useTimer.js';
 import {
   checkAndUpdatePR,
@@ -45,8 +45,6 @@ export default function ActiveWorkout() {
   const [showCancel, setShowCancel] = useState(false);
   const [prToast, setPrToast] = useState({ show: false, exerciseName: '', fields: [] });
   const [gifExpanded, setGifExpanded] = useState({});
-  const [gifUrls, setGifUrls] = useState({});
-  const hasApiKey = Boolean(getApiKey());
   const [restDuration, setRestDuration] = useState(() => {
     const settings = getSettings();
     return settings.restDuration || 90;
@@ -214,14 +212,8 @@ export default function ActiveWorkout() {
     0
   );
 
-  async function toggleGif(exIdx, exercise) {
-    const isOpen = gifExpanded[exIdx];
-    setGifExpanded(prev => ({ ...prev, [exIdx]: !isOpen }));
-    if (!isOpen && !gifUrls[exIdx]) {
-      const searchName = exercise?.apiName || exercise?.name || exIdx;
-      const result = await fetchExerciseGif(searchName);
-      setGifUrls(prev => ({ ...prev, [exIdx]: result ?? 'not-found' }));
-    }
+  function toggleGif(exIdx) {
+    setGifExpanded(prev => ({ ...prev, [exIdx]: !prev[exIdx] }));
   }
 
   function handleRestDurationChange(val) {
@@ -290,9 +282,9 @@ export default function ActiveWorkout() {
                 <span className="font-heading text-xl text-white flex-1">
                   {ex.exercise?.name || ex.exerciseId}
                 </span>
-                {hasApiKey && (
+                {EXERCISE_IMAGES[ex.exerciseId] && (
                   <button
-                    onClick={() => toggleGif(exIdx, ex.exercise)}
+                    onClick={() => toggleGif(exIdx)}
                     className="shrink-0 text-muted hover:text-accent transition-colors"
                     title="Show demo"
                   >
@@ -300,21 +292,13 @@ export default function ActiveWorkout() {
                   </button>
                 )}
               </div>
-              {gifExpanded[exIdx] && (
-                <div className="border-b border-border bg-surface2 flex items-center justify-center min-h-[160px]">
-                  {!gifUrls[exIdx] ? (
-                    <span className="text-xs text-muted font-body">Loading…</span>
-                  ) : gifUrls[exIdx] === 'not-found' ? (
-                    <span className="text-xs text-muted font-body">No animation found</span>
-                  ) : typeof gifUrls[exIdx] === 'string' && gifUrls[exIdx].startsWith('error:') ? (
-                    <span className="text-xs text-accent2 font-mono px-2 text-center">{gifUrls[exIdx]}</span>
-                  ) : (
-                    <img
-                      src={gifUrls[exIdx]}
-                      alt={ex.exercise?.name}
-                      className="max-h-48 object-contain"
-                    />
-                  )}
+              {gifExpanded[exIdx] && EXERCISE_IMAGES[ex.exerciseId] && (
+                <div className="border-b border-border bg-surface2 flex items-center justify-center p-2">
+                  <img
+                    src={EXERCISE_IMAGES[ex.exerciseId]}
+                    alt={ex.exercise?.name}
+                    className="max-h-52 w-auto object-contain rounded"
+                  />
                 </div>
               )}
 
