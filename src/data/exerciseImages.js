@@ -9,10 +9,10 @@ async function loadDb() {
 
   const res = await fetch(DB_URL);
   const data = await res.json();
-  // Store only name + first image to stay well within localStorage limits
+  // Store name + both frames (most exercises have exactly 2)
   const slim = data
     .filter(ex => ex.images?.length)
-    .map(ex => ({ name: ex.name.toLowerCase(), img: ex.images[0] }));
+    .map(ex => ({ name: ex.name.toLowerCase(), img: ex.images[0], img2: ex.images[1] || null }));
   localStorage.setItem(DB_CACHE_KEY, JSON.stringify(slim));
   return slim;
 }
@@ -39,10 +39,12 @@ export async function fetchExerciseImage(exerciseId, apiName) {
   try {
     const db = await loadDb();
     const match = bestMatch(db, apiName || exerciseId.replace(/-/g, ' '));
-    const url = match ? `${BASE}/${match.img}` : null;
-    imgCache[exerciseId] = url;
+    const result = match
+      ? { url: `${BASE}/${match.img}`, url2: match.img2 ? `${BASE}/${match.img2}` : null }
+      : null;
+    imgCache[exerciseId] = result;
     localStorage.setItem(IMG_CACHE_KEY, JSON.stringify(imgCache));
-    return url;
+    return result;
   } catch {
     return null;
   }

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { X, Check, Plus, ChevronDown, PlayCircle } from 'lucide-react';
 import { fetchExerciseImage } from '../data/exerciseImages.js';
+import ExerciseDemo from '../components/ExerciseDemo.jsx';
 import { useStopwatch, useRestTimer, formatTime } from '../hooks/useTimer.js';
 import {
   checkAndUpdatePR,
@@ -218,8 +219,8 @@ export default function ActiveWorkout() {
     setGifExpanded(prev => ({ ...prev, [exIdx]: !isOpen }));
     if (!isOpen && !(exIdx in gifUrls)) {
       setGifUrls(prev => ({ ...prev, [exIdx]: 'loading' }));
-      const url = await fetchExerciseImage(exercise.id, exercise.apiName || exercise.name);
-      setGifUrls(prev => ({ ...prev, [exIdx]: url || 'not-found' }));
+      const result = await fetchExerciseImage(exercise.id, exercise.apiName || exercise.name);
+      setGifUrls(prev => ({ ...prev, [exIdx]: result || 'not-found' }));
     }
   }
 
@@ -304,10 +305,10 @@ export default function ActiveWorkout() {
                   ) : gifUrls[exIdx] === 'not-found' ? (
                     <span className="text-xs text-muted font-body">No image found</span>
                   ) : (
-                    <img
-                      src={gifUrls[exIdx]}
+                    <ExerciseDemo
+                      url={gifUrls[exIdx].url}
+                      url2={gifUrls[exIdx].url2}
                       alt={ex.exercise?.name}
-                      className="max-h-52 w-auto object-contain rounded"
                     />
                   )}
                 </div>
