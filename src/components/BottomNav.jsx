@@ -1,10 +1,11 @@
 import React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { Home, Calendar, TrendingUp, BarChart2 } from 'lucide-react';
+import { Home, Calendar, TrendingUp, BarChart2, LayoutList } from 'lucide-react';
 
 const tabs = [
   { to: '/', label: 'Home', Icon: Home },
   { to: '/history', label: 'History', Icon: Calendar },
+  { to: '/templates', label: 'Templates', Icon: LayoutList },
   { to: '/progress', label: 'Progress', Icon: TrendingUp },
   { to: '/stats', label: 'Stats', Icon: BarChart2 },
 ];

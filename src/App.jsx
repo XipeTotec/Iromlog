@@ -7,6 +7,7 @@ import WorkoutSummary from './pages/WorkoutSummary.jsx';
 import History from './pages/History.jsx';
 import Progress from './pages/Progress.jsx';
 import Stats from './pages/Stats.jsx';
+import Templates from './pages/Templates.jsx';
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
         <Route path="/history" element={<History />} />
         <Route path="/progress" element={<Progress />} />
         <Route path="/stats" element={<Stats />} />
+        <Route path="/templates" element={<Templates />} />
       </Routes>
       <BottomNav />
     </BrowserRouter>
