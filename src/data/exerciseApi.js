@@ -1,8 +1,9 @@
 const KEY_STORAGE = 'il_rapidapi_key';
 const GIF_CACHE = 'il_gif_cache';
+const DEFAULT_KEY = '8d2c948e08msh7b98a319dd98830p15254cjsn98b658f1cb5d';
 
 export function getApiKey() {
-  return localStorage.getItem(KEY_STORAGE) || '';
+  return localStorage.getItem(KEY_STORAGE) || DEFAULT_KEY;
 }
 
 export function saveApiKey(key) {
@@ -23,11 +24,9 @@ export function clearGifCache() {
 
 export async function fetchExerciseGif(exerciseName) {
   const apiKey = getApiKey();
-  if (!apiKey) return null;
-
   const cacheKey = exerciseName.toLowerCase().trim();
   const cache = readCache();
-  if (cache[cacheKey] !== undefined) return cache[cacheKey]; // null cached = not found
+  if (cache[cacheKey] !== undefined) return cache[cacheKey];
 
   try {
     const res = await fetch(
@@ -39,13 +38,23 @@ export async function fetchExerciseGif(exerciseName) {
         },
       }
     );
-    if (!res.ok) return null;
-    const data = await res.json();
-    const gifUrl = (Array.isArray(data) && data[0]?.gifUrl) || null;
+
+    const text = await res.text();
+    let data;
+    try { data = JSON.parse(text); } catch { return `error: ${text.slice(0, 80)}`; }
+
+    if (!res.ok) {
+      const msg = data?.message || data?.error || `HTTP ${res.status}`;
+      return `error: ${msg}`;
+    }
+
+    // Handle both array and { exercises: [] } shapes
+    const list = Array.isArray(data) ? data : (data?.exercises ?? []);
+    const gifUrl = list[0]?.gifUrl || null;
     cache[cacheKey] = gifUrl;
     writeCache(cache);
     return gifUrl;
-  } catch {
-    return null;
+  } catch (err) {
+    return `error: ${err.message}`;
   }
 }

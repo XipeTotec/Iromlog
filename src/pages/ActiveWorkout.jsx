@@ -219,8 +219,8 @@ export default function ActiveWorkout() {
     setGifExpanded(prev => ({ ...prev, [exIdx]: !isOpen }));
     if (!isOpen && !gifUrls[exIdx]) {
       const searchName = exercise?.apiName || exercise?.name || exIdx;
-      const url = await fetchExerciseGif(searchName);
-      setGifUrls(prev => ({ ...prev, [exIdx]: url || 'not-found' }));
+      const result = await fetchExerciseGif(searchName);
+      setGifUrls(prev => ({ ...prev, [exIdx]: result ?? 'not-found' }));
     }
   }
 
@@ -306,6 +306,8 @@ export default function ActiveWorkout() {
                     <span className="text-xs text-muted font-body">Loading…</span>
                   ) : gifUrls[exIdx] === 'not-found' ? (
                     <span className="text-xs text-muted font-body">No animation found</span>
+                  ) : typeof gifUrls[exIdx] === 'string' && gifUrls[exIdx].startsWith('error:') ? (
+                    <span className="text-xs text-accent2 font-mono px-2 text-center">{gifUrls[exIdx]}</span>
                   ) : (
                     <img
                       src={gifUrls[exIdx]}
