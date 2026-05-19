@@ -1,9 +1,9 @@
 {
   "name": "IRON LOG",
   "short_name": "IRON LOG",
-  "start_url": "/Iron-log/",
+  "start_url": "/Iromlog/",
   "display": "standalone",
   "background_color": "#0d0d0d",
   "theme_color": "#0d0d0d",
-  "icons": [{ "src": "/Iron-log/icon.svg", "sizes": "any", "type": "image/svg+xml" }]
+  "icons": [{ "src": "/Iromlog/icon.svg", "sizes": "any", "type": "image/svg+xml" }]
 }

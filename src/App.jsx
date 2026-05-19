@@ -10,7 +10,7 @@ import Stats from './pages/Stats.jsx';
 
 export default function App() {
   return (
-    <BrowserRouter basename="/Iron-log">
+    <BrowserRouter basename="/Iromlog">
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/workout/active" element={<ActiveWorkout />} />
