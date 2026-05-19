@@ -14,20 +14,16 @@ import RestTimer from '../components/RestTimer.jsx';
 import Toast from '../components/Toast.jsx';
 
 function buildInitialSets(defaultSets, defaultReps, prevSets) {
-  const sets = [];
-  for (let i = 0; i < defaultSets; i++) {
-    const prevWorkingSet = prevSets ? prevSets.filter(s => !s.isWarmup)[i] : null;
-    sets.push({
-      id: `set-${i}-${Date.now()}`,
-      setNumber: i + 1,
-      weight: prevWorkingSet ? String(prevWorkingSet.weight) : '',
-      reps: prevWorkingSet ? String(prevWorkingSet.reps) : String(defaultReps),
-      done: false,
-      isWarmup: false,
-      isPR: false,
-    });
-  }
-  return sets;
+  const prevWorkingSet = prevSets ? prevSets.filter(s => !s.isWarmup)[0] : null;
+  return [{
+    id: `set-0-${Date.now()}`,
+    setNumber: 1,
+    weight: prevWorkingSet ? String(prevWorkingSet.weight) : '',
+    reps: prevWorkingSet ? String(prevWorkingSet.reps) : String(defaultReps),
+    done: false,
+    isWarmup: false,
+    isPR: false,
+  }];
 }
 
 export default function ActiveWorkout() {
@@ -404,7 +400,7 @@ export default function ActiveWorkout() {
                   className="flex-1 flex items-center justify-center gap-1 py-2 text-xs font-body text-muted border border-border rounded hover:border-accent hover:text-accent transition-colors"
                 >
                   <Plus size={13} />
-                  ADD SET
+                  COPY LAST SET
                 </button>
                 <button
                   onClick={() => handleAddWarmup(exIdx)}
