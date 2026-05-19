@@ -3,7 +3,7 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, LineChart, Line, Cell
 } from 'recharts';
-import { Trash2, Key } from 'lucide-react';
+import { Trash2, Key, RefreshCw } from 'lucide-react';
 import { getApiKey, saveApiKey } from '../data/exerciseApi.js';
 import {
   getSessions,
@@ -391,6 +391,28 @@ export default function Stats() {
                 {apiKeySaved ? '✓' : 'SAVE'}
               </button>
             </div>
+          </div>
+
+          <div className="pt-2 border-t border-border">
+            <label className="text-xs font-body text-muted uppercase tracking-wider block mb-2">
+              Force Update
+            </label>
+            <button
+              onClick={async () => {
+                if ('caches' in window) {
+                  const keys = await caches.keys();
+                  await Promise.all(keys.map(k => caches.delete(k)));
+                }
+                if ('serviceWorker' in navigator) {
+                  const regs = await navigator.serviceWorker.getRegistrations();
+                  await Promise.all(regs.map(r => r.unregister()));
+                }
+                window.location.reload();
+              }}
+              className="w-full flex items-center justify-center gap-2 border border-border rounded py-2 font-heading text-base tracking-wider text-muted hover:text-white hover:border-white transition-colors"
+            >
+              <RefreshCw size={15} /> HARD RELOAD
+            </button>
           </div>
         </div>
       </div>
