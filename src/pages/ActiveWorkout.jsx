@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { X, Check, Plus, ChevronDown } from 'lucide-react';
+import { X, Check, Plus, ChevronDown, PlayCircle } from 'lucide-react';
+import { fetchExerciseGif, getApiKey } from '../data/exerciseApi.js';
 import { useStopwatch, useRestTimer, formatTime } from '../hooks/useTimer.js';
 import {
   checkAndUpdatePR,
@@ -43,13 +44,18 @@ export default function ActiveWorkout() {
 
   const [showCancel, setShowCancel] = useState(false);
   const [prToast, setPrToast] = useState({ show: false, exerciseName: '', fields: [] });
+  const [gifExpanded, setGifExpanded] = useState({});
+  const [gifUrls, setGifUrls] = useState({});
+  const hasApiKey = Boolean(getApiKey());
   const [restDuration, setRestDuration] = useState(() => {
     const settings = getSettings();
     return settings.restDuration || 90;
   });
 
   const stopwatch = useStopwatch();
-  const restTimer = useRestTimer(useCallback(() => {}, []));
+  const restTimer = useRestTimer(useCallback(() => {
+    if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+  }, []));
 
   useEffect(() => {
     stopwatch.start();
@@ -208,6 +214,15 @@ export default function ActiveWorkout() {
     0
   );
 
+  async function toggleGif(exIdx, exerciseName) {
+    const isOpen = gifExpanded[exIdx];
+    setGifExpanded(prev => ({ ...prev, [exIdx]: !isOpen }));
+    if (!isOpen && !gifUrls[exIdx]) {
+      const url = await fetchExerciseGif(exerciseName);
+      setGifUrls(prev => ({ ...prev, [exIdx]: url || 'not-found' }));
+    }
+  }
+
   function handleRestDurationChange(val) {
     const dur = parseInt(val);
     setRestDuration(dur);
@@ -262,7 +277,7 @@ export default function ActiveWorkout() {
             <div key={exIdx} className="bg-surface border border-border rounded-lg overflow-hidden">
               <div className="px-4 py-3 flex items-center gap-3 border-b border-border">
                 <span
-                  className="text-xs font-body uppercase tracking-wider px-2 py-0.5 rounded"
+                  className="text-xs font-body uppercase tracking-wider px-2 py-0.5 rounded shrink-0"
                   style={{
                     backgroundColor: muscleColor + '22',
                     color: muscleColor,
@@ -271,10 +286,34 @@ export default function ActiveWorkout() {
                 >
                   {ex.exercise?.muscleGroup || '—'}
                 </span>
-                <span className="font-heading text-xl text-white">
+                <span className="font-heading text-xl text-white flex-1">
                   {ex.exercise?.name || ex.exerciseId}
                 </span>
+                {hasApiKey && (
+                  <button
+                    onClick={() => toggleGif(exIdx, ex.exercise?.name || ex.exerciseId)}
+                    className="shrink-0 text-muted hover:text-accent transition-colors"
+                    title="Show demo"
+                  >
+                    <PlayCircle size={20} />
+                  </button>
+                )}
               </div>
+              {gifExpanded[exIdx] && (
+                <div className="border-b border-border bg-surface2 flex items-center justify-center min-h-[160px]">
+                  {!gifUrls[exIdx] ? (
+                    <span className="text-xs text-muted font-body">Loading…</span>
+                  ) : gifUrls[exIdx] === 'not-found' ? (
+                    <span className="text-xs text-muted font-body">No animation found</span>
+                  ) : (
+                    <img
+                      src={gifUrls[exIdx]}
+                      alt={ex.exercise?.name}
+                      className="max-h-48 object-contain"
+                    />
+                  )}
+                </div>
+              )}
 
               <div className="px-4 py-2 space-y-1">
                 {/* Header row */}
@@ -433,6 +472,10 @@ export default function ActiveWorkout() {
         timeLeft={restTimer.timeLeft}
         duration={restDuration}
         isRunning={restTimer.isRunning}
+        isActive={restTimer.isActive}
+        onPause={restTimer.pause}
+        onResume={restTimer.resume}
+        onReset={restTimer.reset}
         onSkip={restTimer.skip}
       />
 

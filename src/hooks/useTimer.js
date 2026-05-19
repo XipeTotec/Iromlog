@@ -11,24 +11,13 @@ export function useStopwatch() {
   const [isRunning, setIsRunning] = useState(false);
   const intervalRef = useRef(null);
 
-  const start = useCallback(() => {
-    setIsRunning(true);
-  }, []);
-
-  const stop = useCallback(() => {
-    setIsRunning(false);
-  }, []);
-
-  const reset = useCallback(() => {
-    setIsRunning(false);
-    setSeconds(0);
-  }, []);
+  const start = useCallback(() => setIsRunning(true), []);
+  const stop = useCallback(() => setIsRunning(false), []);
+  const reset = useCallback(() => { setIsRunning(false); setSeconds(0); }, []);
 
   useEffect(() => {
     if (isRunning) {
-      intervalRef.current = setInterval(() => {
-        setSeconds(s => s + 1);
-      }, 1000);
+      intervalRef.current = setInterval(() => setSeconds(s => s + 1), 1000);
     } else {
       clearInterval(intervalRef.current);
     }
@@ -42,44 +31,53 @@ export function useRestTimer(onFinish) {
   const [duration, setDuration] = useState(90);
   const [timeLeft, setTimeLeft] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
-  const intervalRef = useRef(null);
+  const [isActive, setIsActive] = useState(false);
   const onFinishRef = useRef(onFinish);
+  const durationRef = useRef(duration);
 
-  useEffect(() => {
-    onFinishRef.current = onFinish;
-  }, [onFinish]);
+  useEffect(() => { onFinishRef.current = onFinish; }, [onFinish]);
+  useEffect(() => { durationRef.current = duration; }, [duration]);
 
   const start = useCallback((dur) => {
-    const d = dur !== undefined ? dur : duration;
+    const d = dur !== undefined ? dur : durationRef.current;
     setDuration(d);
+    durationRef.current = d;
     setTimeLeft(d);
     setIsRunning(true);
-  }, [duration]);
+    setIsActive(true);
+  }, []);
+
+  const pause = useCallback(() => setIsRunning(false), []);
+  const resume = useCallback(() => setIsRunning(true), []);
+
+  const reset = useCallback(() => {
+    setTimeLeft(durationRef.current);
+    setIsRunning(true);
+    setIsActive(true);
+  }, []);
 
   const skip = useCallback(() => {
-    clearInterval(intervalRef.current);
     setIsRunning(false);
+    setIsActive(false);
     setTimeLeft(0);
   }, []);
 
   useEffect(() => {
-    if (isRunning) {
-      intervalRef.current = setInterval(() => {
-        setTimeLeft(t => {
-          if (t <= 1) {
-            clearInterval(intervalRef.current);
-            setIsRunning(false);
-            if (onFinishRef.current) onFinishRef.current();
-            return 0;
-          }
-          return t - 1;
-        });
-      }, 1000);
-    } else {
-      clearInterval(intervalRef.current);
-    }
-    return () => clearInterval(intervalRef.current);
+    if (!isRunning) { return; }
+    const id = setInterval(() => {
+      setTimeLeft(t => {
+        if (t <= 1) {
+          clearInterval(id);
+          setIsRunning(false);
+          setIsActive(false);
+          if (onFinishRef.current) onFinishRef.current();
+          return 0;
+        }
+        return t - 1;
+      });
+    }, 1000);
+    return () => clearInterval(id);
   }, [isRunning]);
 
-  return { timeLeft, isRunning, start, skip, duration, setDuration };
+  return { timeLeft, isRunning, isActive, start, pause, resume, reset, skip, duration, setDuration };
 }
