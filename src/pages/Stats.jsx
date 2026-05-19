@@ -4,7 +4,7 @@ import {
   ResponsiveContainer, LineChart, Line, Cell
 } from 'recharts';
 import { Trash2, Key, RefreshCw } from 'lucide-react';
-import { getApiKey, saveApiKey, clearGifCache } from '../data/exerciseApi.js';
+import { clearGifCache } from '../data/exerciseApi.js';
 import { clearExerciseImageCache } from '../data/exerciseImages.js';
 import {
   getSessions,
@@ -49,8 +49,6 @@ export default function Stats() {
   const [bsDate, setBsDate] = useState(new Date().toISOString().split('T')[0]);
   const [bsWeight, setBsWeight] = useState('');
   const [bsFat, setBsFat] = useState('');
-  const [apiKey, setApiKey] = useState(getApiKey);
-  const [apiKeySaved, setApiKeySaved] = useState(false);
 
   useEffect(() => {
     setSessions(getSessions());
@@ -371,30 +369,6 @@ export default function Stats() {
         </h2>
         <div className="bg-surface border border-border rounded-lg p-4 space-y-3">
           <div>
-            <label className="text-xs font-body text-muted uppercase tracking-wider block mb-1">
-              RapidAPI Key <span className="normal-case">(for exercise GIF demos)</span>
-            </label>
-            <p className="text-xs text-muted font-body mb-2">
-              Get a free key at rapidapi.com → search "ExerciseDB" → Subscribe (free tier: 500 req/month).
-            </p>
-            <div className="flex gap-2">
-              <input
-                type="password"
-                value={apiKey}
-                onChange={e => { setApiKey(e.target.value); setApiKeySaved(false); }}
-                placeholder="Paste your RapidAPI key…"
-                className="flex-1 bg-surface2 border border-border rounded px-3 py-2 font-mono text-xs text-white focus:outline-none focus:border-accent"
-              />
-              <button
-                onClick={() => { saveApiKey(apiKey); setApiKeySaved(true); }}
-                className="px-4 bg-accent text-bg font-heading text-base rounded tracking-wider hover:opacity-90 transition-opacity"
-              >
-                {apiKeySaved ? '✓' : 'SAVE'}
-              </button>
-            </div>
-          </div>
-
-          <div className="pt-2 border-t border-border">
             <label className="text-xs font-body text-muted uppercase tracking-wider block mb-2">
               GIF Cache
             </label>

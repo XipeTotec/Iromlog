@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { X, Check, Plus, ChevronDown, PlayCircle } from 'lucide-react';
 import { fetchExerciseImage } from '../data/exerciseImages.js';
+import { fetchExerciseGif } from '../data/exerciseApi.js';
 import ExerciseDemo from '../components/ExerciseDemo.jsx';
 import { useStopwatch, useRestTimer, formatTime } from '../hooks/useTimer.js';
 import {
@@ -219,8 +220,15 @@ export default function ActiveWorkout() {
     setGifExpanded(prev => ({ ...prev, [exIdx]: !isOpen }));
     if (!isOpen && !(exIdx in gifUrls)) {
       setGifUrls(prev => ({ ...prev, [exIdx]: 'loading' }));
-      const result = await fetchExerciseImage(exercise.id, exercise.apiName || exercise.name);
-      setGifUrls(prev => ({ ...prev, [exIdx]: result || 'not-found' }));
+      // Try animated GIF from exercisedb.io first, fall back to 2-frame animation
+      const apiName = exercise.apiName || exercise.name;
+      const gif = await fetchExerciseGif(apiName);
+      if (gif && !gif.startsWith('error:')) {
+        setGifUrls(prev => ({ ...prev, [exIdx]: { gif } }));
+      } else {
+        const result = await fetchExerciseImage(exercise.id, apiName);
+        setGifUrls(prev => ({ ...prev, [exIdx]: result || 'not-found' }));
+      }
     }
   }
 
@@ -304,6 +312,12 @@ export default function ActiveWorkout() {
                     <span className="text-xs text-muted font-body">Loading…</span>
                   ) : gifUrls[exIdx] === 'not-found' ? (
                     <span className="text-xs text-muted font-body">No image found</span>
+                  ) : gifUrls[exIdx]?.gif ? (
+                    <img
+                      src={gifUrls[exIdx].gif}
+                      alt={ex.exercise?.name}
+                      className="max-h-52 w-auto object-contain rounded"
+                    />
                   ) : (
                     <ExerciseDemo
                       url={gifUrls[exIdx].url}
