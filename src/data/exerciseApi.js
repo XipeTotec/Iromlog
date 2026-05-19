@@ -17,6 +17,10 @@ function writeCache(cache) {
   localStorage.setItem(GIF_CACHE, JSON.stringify(cache));
 }
 
+export function clearGifCache() {
+  localStorage.removeItem(GIF_CACHE);
+}
+
 export async function fetchExerciseGif(exerciseName) {
   const apiKey = getApiKey();
   if (!apiKey) return null;

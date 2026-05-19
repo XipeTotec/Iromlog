@@ -214,11 +214,12 @@ export default function ActiveWorkout() {
     0
   );
 
-  async function toggleGif(exIdx, exerciseName) {
+  async function toggleGif(exIdx, exercise) {
     const isOpen = gifExpanded[exIdx];
     setGifExpanded(prev => ({ ...prev, [exIdx]: !isOpen }));
     if (!isOpen && !gifUrls[exIdx]) {
-      const url = await fetchExerciseGif(exerciseName);
+      const searchName = exercise?.apiName || exercise?.name || exIdx;
+      const url = await fetchExerciseGif(searchName);
       setGifUrls(prev => ({ ...prev, [exIdx]: url || 'not-found' }));
     }
   }
@@ -291,7 +292,7 @@ export default function ActiveWorkout() {
                 </span>
                 {hasApiKey && (
                   <button
-                    onClick={() => toggleGif(exIdx, ex.exercise?.name || ex.exerciseId)}
+                    onClick={() => toggleGif(exIdx, ex.exercise)}
                     className="shrink-0 text-muted hover:text-accent transition-colors"
                     title="Show demo"
                   >

@@ -4,7 +4,7 @@ import {
   ResponsiveContainer, LineChart, Line, Cell
 } from 'recharts';
 import { Trash2, Key, RefreshCw } from 'lucide-react';
-import { getApiKey, saveApiKey } from '../data/exerciseApi.js';
+import { getApiKey, saveApiKey, clearGifCache } from '../data/exerciseApi.js';
 import {
   getSessions,
   getExercises,
@@ -391,6 +391,18 @@ export default function Stats() {
                 {apiKeySaved ? '✓' : 'SAVE'}
               </button>
             </div>
+          </div>
+
+          <div className="pt-2 border-t border-border">
+            <label className="text-xs font-body text-muted uppercase tracking-wider block mb-2">
+              GIF Cache
+            </label>
+            <button
+              onClick={() => { clearGifCache(); alert('GIF cache cleared — tap ▶ again to re-fetch.'); }}
+              className="w-full mb-3 border border-border rounded py-2 font-heading text-base tracking-wider text-muted hover:text-white hover:border-white transition-colors"
+            >
+              CLEAR GIF CACHE
+            </button>
           </div>
 
           <div className="pt-2 border-t border-border">
