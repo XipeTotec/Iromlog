@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { X, Pause, Play } from 'lucide-react';
 import { useStopwatch, formatTime } from '../hooks/useTimer.js';
 import { saveCardioSession } from '../data/storage.js';
@@ -12,8 +12,9 @@ const TYPES = Object.keys(CARDIO_TYPES);
 
 export default function ActiveCardio() {
   const navigate = useNavigate();
+  const location = useLocation();
   const stopwatch = useStopwatch();
-  const [type, setType] = useState('run');
+  const [type, setType] = useState(location.state?.type || 'run');
   const [started, setStarted] = useState(false);
   const [distanceKm, setDistanceKm] = useState('');
   const [distanceM, setDistanceM] = useState('');
