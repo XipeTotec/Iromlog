@@ -5,7 +5,7 @@ import {
 } from 'recharts';
 import { Trash2, Key, RefreshCw } from 'lucide-react';
 import { clearGifCache } from '../data/exerciseApi.js';
-import { clearExerciseImageCache } from '../data/exerciseImages.js';
+import { clearExerciseImageCache, getDbStatus, downloadExerciseDb } from '../data/exerciseImages.js';
 import {
   getSessions,
   getExercises,
@@ -49,6 +49,8 @@ export default function Stats() {
   const [bsDate, setBsDate] = useState(new Date().toISOString().split('T')[0]);
   const [bsWeight, setBsWeight] = useState('');
   const [bsFat, setBsFat] = useState('');
+  const [dbStatus, setDbStatus] = useState(getDbStatus);
+  const [dbLoading, setDbLoading] = useState(false);
 
   useEffect(() => {
     setSessions(getSessions());
@@ -367,8 +369,41 @@ export default function Stats() {
         <h2 className="font-heading text-2xl text-white tracking-wider mb-3 flex items-center gap-2">
           <Key size={18} className="text-muted" /> SETTINGS
         </h2>
-        <div className="bg-surface border border-border rounded-lg p-4 space-y-3">
+        <div className="bg-surface border border-border rounded-lg p-4 space-y-4">
           <div>
+            <label className="text-xs font-body text-muted uppercase tracking-wider block mb-2">
+              Exercise Image Database
+            </label>
+            {dbStatus.loaded ? (
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-mono text-accent">✓ {dbStatus.count} exercises loaded</span>
+                <button
+                  onClick={() => { clearExerciseImageCache(); setDbStatus({ loaded: false, count: 0 }); }}
+                  className="text-xs font-body text-muted hover:text-accent2 transition-colors"
+                >
+                  Clear
+                </button>
+              </div>
+            ) : (
+              <button
+                disabled={dbLoading}
+                onClick={async () => {
+                  setDbLoading(true);
+                  try {
+                    const count = await downloadExerciseDb();
+                    setDbStatus({ loaded: true, count });
+                  } finally {
+                    setDbLoading(false);
+                  }
+                }}
+                className="w-full flex items-center justify-center gap-2 border border-border rounded py-2 font-heading text-base tracking-wider text-muted hover:text-white hover:border-white transition-colors disabled:opacity-40"
+              >
+                {dbLoading ? 'Downloading…' : 'DOWNLOAD (~2MB)'}
+              </button>
+            )}
+          </div>
+
+          <div className="border-t border-border pt-3">
             <label className="text-xs font-body text-muted uppercase tracking-wider block mb-2">
               GIF Cache
             </label>

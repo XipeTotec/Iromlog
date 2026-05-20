@@ -9,12 +9,32 @@ async function loadDb() {
 
   const res = await fetch(DB_URL);
   const data = await res.json();
-  // Store name + both frames (most exercises have exactly 2)
   const slim = data
     .filter(ex => ex.images?.length)
     .map(ex => ({ name: ex.name.toLowerCase(), img: ex.images[0], img2: ex.images[1] || null }));
   localStorage.setItem(DB_CACHE_KEY, JSON.stringify(slim));
   return slim;
+}
+
+export function getDbStatus() {
+  const raw = localStorage.getItem(DB_CACHE_KEY);
+  if (!raw) return { loaded: false, count: 0 };
+  try {
+    const db = JSON.parse(raw);
+    return { loaded: true, count: db.length };
+  } catch {
+    return { loaded: false, count: 0 };
+  }
+}
+
+export async function downloadExerciseDb() {
+  const res = await fetch(DB_URL);
+  const data = await res.json();
+  const slim = data
+    .filter(ex => ex.images?.length)
+    .map(ex => ({ name: ex.name.toLowerCase(), img: ex.images[0], img2: ex.images[1] || null }));
+  localStorage.setItem(DB_CACHE_KEY, JSON.stringify(slim));
+  return slim.length;
 }
 
 function bestMatch(db, searchName) {
