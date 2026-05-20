@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { X, Check, Plus, ChevronDown, PlayCircle } from 'lucide-react';
+import { X, Check, Plus, ChevronDown, PlayCircle, TrendingUp } from 'lucide-react';
 import { fetchExerciseImage } from '../data/exerciseImages.js';
 import { fetchExerciseGif } from '../data/exerciseApi.js';
 import ExerciseDemo from '../components/ExerciseDemo.jsx';
@@ -15,6 +15,20 @@ import {
 import { MUSCLE_COLORS } from '../data/exercises.js';
 import RestTimer from '../components/RestTimer.jsx';
 import Toast from '../components/Toast.jsx';
+
+function getPoSuggestion(prevSets) {
+  const done = (prevSets || []).filter(s => !s.isWarmup && s.done && s.weight > 0 && s.reps > 0);
+  if (!done.length) return null;
+  const maxWeight = Math.max(...done.map(s => s.weight));
+  const topSets = done.filter(s => s.weight === maxWeight);
+  const avgReps = Math.round(topSets.reduce((sum, s) => sum + s.reps, 0) / topSets.length);
+  return {
+    sets: done.length,
+    weight: maxWeight,
+    reps: avgReps,
+    suggested: Math.round((maxWeight + 2.5) * 4) / 4, // nearest 0.25
+  };
+}
 
 function buildInitialSets(defaultSets, defaultReps, prevSets) {
   const prevWorkingSet = prevSets ? prevSets.filter(s => !s.isWarmup)[0] : null;
@@ -232,6 +246,16 @@ export default function ActiveWorkout() {
     }
   }
 
+  function applyPoWeight(exIdx, weight) {
+    setExercises(prev => prev.map((ex, i) => {
+      if (i !== exIdx) return ex;
+      return {
+        ...ex,
+        sets: ex.sets.map(s => s.isWarmup ? s : { ...s, weight: String(weight) }),
+      };
+    }));
+  }
+
   function handleRestDurationChange(val) {
     const dur = parseInt(val);
     setRestDuration(dur);
@@ -282,6 +306,8 @@ export default function ActiveWorkout() {
           const workingSets = ex.sets.filter(s => !s.isWarmup);
           const warmupSets = ex.sets.filter(s => s.isWarmup);
 
+          const po = getPoSuggestion(ex.prevSets);
+
           return (
             <div
               key={exIdx}
@@ -314,6 +340,22 @@ export default function ActiveWorkout() {
                   ) : (
                     <ExerciseDemo url={gifUrls[exIdx].url} url2={gifUrls[exIdx].url2} alt={ex.exercise?.name} />
                   )}
+                </div>
+              )}
+
+              {/* PO suggestion */}
+              {po && (
+                <div className="px-3 py-2 border-b border-border flex items-center gap-2 bg-surface2">
+                  <TrendingUp size={13} className="text-accent shrink-0" />
+                  <span className="text-xs font-mono text-muted flex-1">
+                    Last: {po.sets}×{po.weight}kg×{po.reps}
+                  </span>
+                  <button
+                    onClick={() => applyPoWeight(exIdx, po.suggested)}
+                    className="text-xs font-mono text-accent border border-accent/40 rounded px-2 py-0.5 hover:bg-accent/10 transition-colors shrink-0"
+                  >
+                    +2.5 → {po.suggested}kg
+                  </button>
                 </div>
               )}
 
