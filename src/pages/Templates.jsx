@@ -123,7 +123,7 @@ export default function Templates() {
     <div className="min-h-screen bg-bg pb-24">
       <div className="px-4 pt-6 pb-4 max-w-lg mx-auto">
         <div className="flex items-center justify-between mb-6">
-          <h1 className="font-heading text-3xl text-white tracking-wider">TEMPLATES</h1>
+          <h1 className="font-heading text-3xl text-fg tracking-wider">TEMPLATES</h1>
           <button
             onClick={startNew}
             className="flex items-center gap-1 bg-accent text-bg font-heading text-base px-3 py-2 rounded tracking-wider hover:opacity-90 transition-opacity"
@@ -152,7 +152,7 @@ export default function Templates() {
                     >
                       {template.type}
                     </span>
-                    <span className="font-heading text-xl text-white truncate">{template.name}</span>
+                    <span className="font-heading text-xl text-fg truncate">{template.name}</span>
                   </div>
                   {isEditing ? <ChevronUp size={18} className="text-muted shrink-0" /> : <ChevronDown size={18} className="text-muted shrink-0" />}
                 </button>
@@ -168,7 +168,7 @@ export default function Templates() {
                         value={draft.name}
                         onChange={e => setDraft(prev => ({ ...prev, name: e.target.value }))}
                         placeholder="Template name"
-                        className="w-full bg-surface2 border border-border rounded px-3 py-2 font-body text-white focus:outline-none focus:border-accent"
+                        className="w-full bg-surface2 border border-border rounded px-3 py-2 font-body text-fg focus:outline-none focus:border-accent"
                       />
                     </div>
 
@@ -207,10 +207,10 @@ export default function Templates() {
                           return (
                             <div key={idx} className="flex items-center gap-2 bg-surface2 rounded px-2 py-2">
                               <div className="flex flex-col gap-0.5 shrink-0">
-                                <button onClick={() => moveExercise(idx, -1)} className="text-muted hover:text-white disabled:opacity-20" disabled={idx === 0}>
+                                <button onClick={() => moveExercise(idx, -1)} className="text-muted hover:text-fg disabled:opacity-20" disabled={idx === 0}>
                                   <ChevronUp size={13} />
                                 </button>
-                                <button onClick={() => moveExercise(idx, 1)} className="text-muted hover:text-white disabled:opacity-20" disabled={idx === draft.exercises.length - 1}>
+                                <button onClick={() => moveExercise(idx, 1)} className="text-muted hover:text-fg disabled:opacity-20" disabled={idx === draft.exercises.length - 1}>
                                   <ChevronDown size={13} />
                                 </button>
                               </div>
@@ -218,7 +218,7 @@ export default function Templates() {
                                 className="w-2 h-2 rounded-full shrink-0"
                                 style={{ backgroundColor: mc }}
                               />
-                              <span className="flex-1 font-body text-sm text-white truncate">
+                              <span className="flex-1 font-body text-sm text-fg truncate">
                                 {exData?.name || ex.exerciseId}
                               </span>
                               <div className="flex items-center gap-1 shrink-0">
@@ -226,14 +226,14 @@ export default function Templates() {
                                   type="number"
                                   value={ex.defaultSets}
                                   onChange={e => updateExerciseField(idx, 'defaultSets', e.target.value)}
-                                  className="w-10 bg-surface border border-border rounded px-1 py-1 text-center font-mono text-xs text-white focus:outline-none focus:border-accent"
+                                  className="w-10 bg-surface border border-border rounded px-1 py-1 text-center font-mono text-xs text-fg focus:outline-none focus:border-accent"
                                 />
                                 <span className="text-muted text-xs font-mono">×</span>
                                 <input
                                   type="number"
                                   value={ex.defaultReps}
                                   onChange={e => updateExerciseField(idx, 'defaultReps', e.target.value)}
-                                  className="w-10 bg-surface border border-border rounded px-1 py-1 text-center font-mono text-xs text-white focus:outline-none focus:border-accent"
+                                  className="w-10 bg-surface border border-border rounded px-1 py-1 text-center font-mono text-xs text-fg focus:outline-none focus:border-accent"
                                 />
                               </div>
                               <button onClick={() => removeExercise(idx)} className="text-muted hover:text-accent2 transition-colors shrink-0">
@@ -254,7 +254,7 @@ export default function Templates() {
                               value={exerciseSearch}
                               onChange={e => setExerciseSearch(e.target.value)}
                               placeholder="Search exercises..."
-                              className="w-full bg-transparent px-3 py-2 font-body text-sm text-white focus:outline-none border-b border-border"
+                              className="w-full bg-transparent px-3 py-2 font-body text-sm text-fg focus:outline-none border-b border-border"
                               autoFocus
                             />
                             <div className="max-h-48 overflow-y-auto">
@@ -270,7 +270,7 @@ export default function Templates() {
                                       className="w-full flex items-center gap-2 px-3 py-2 text-left hover:bg-surface transition-colors"
                                     >
                                       <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: mc }} />
-                                      <span className="font-body text-sm text-white">{ex.name}</span>
+                                      <span className="font-body text-sm text-fg">{ex.name}</span>
                                       <span className="text-xs text-muted ml-auto">{ex.muscleGroup}</span>
                                     </button>
                                   );
@@ -301,7 +301,7 @@ export default function Templates() {
                       </button>
                       <button
                         onClick={cancelEdit}
-                        className="px-4 bg-surface2 text-muted font-heading text-lg py-2.5 rounded border border-border hover:text-white transition-colors"
+                        className="px-4 bg-surface2 text-muted font-heading text-lg py-2.5 rounded border border-border hover:text-fg transition-colors"
                       >
                         CANCEL
                       </button>
@@ -344,7 +344,7 @@ export default function Templates() {
         <div className="px-4 max-w-lg mx-auto mt-3">
           <div className="bg-surface border border-accent/40 rounded-lg overflow-hidden">
             <div className="px-4 py-3 border-b border-border flex items-center justify-between">
-              <span className="font-heading text-xl text-white">NEW TEMPLATE</span>
+              <span className="font-heading text-xl text-fg">NEW TEMPLATE</span>
               <button onClick={cancelEdit}><X size={18} className="text-muted" /></button>
             </div>
             <div className="px-4 py-4 space-y-4">
@@ -355,7 +355,7 @@ export default function Templates() {
                   value={draft.name}
                   onChange={e => setDraft(prev => ({ ...prev, name: e.target.value }))}
                   placeholder="Template name"
-                  className="w-full bg-surface2 border border-border rounded px-3 py-2 font-body text-white focus:outline-none focus:border-accent"
+                  className="w-full bg-surface2 border border-border rounded px-3 py-2 font-body text-fg focus:outline-none focus:border-accent"
                   autoFocus
                 />
               </div>
@@ -391,17 +391,17 @@ export default function Templates() {
                     return (
                       <div key={idx} className="flex items-center gap-2 bg-surface2 rounded px-2 py-2">
                         <div className="flex flex-col gap-0.5 shrink-0">
-                          <button onClick={() => moveExercise(idx, -1)} className="text-muted hover:text-white" disabled={idx === 0}><ChevronUp size={13} /></button>
-                          <button onClick={() => moveExercise(idx, 1)} className="text-muted hover:text-white" disabled={idx === draft.exercises.length - 1}><ChevronDown size={13} /></button>
+                          <button onClick={() => moveExercise(idx, -1)} className="text-muted hover:text-fg" disabled={idx === 0}><ChevronUp size={13} /></button>
+                          <button onClick={() => moveExercise(idx, 1)} className="text-muted hover:text-fg" disabled={idx === draft.exercises.length - 1}><ChevronDown size={13} /></button>
                         </div>
                         <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: mc }} />
-                        <span className="flex-1 font-body text-sm text-white truncate">{exData?.name || ex.exerciseId}</span>
+                        <span className="flex-1 font-body text-sm text-fg truncate">{exData?.name || ex.exerciseId}</span>
                         <div className="flex items-center gap-1 shrink-0">
                           <input type="number" value={ex.defaultSets} onChange={e => updateExerciseField(idx, 'defaultSets', e.target.value)}
-                            className="w-10 bg-surface border border-border rounded px-1 py-1 text-center font-mono text-xs text-white focus:outline-none focus:border-accent" />
+                            className="w-10 bg-surface border border-border rounded px-1 py-1 text-center font-mono text-xs text-fg focus:outline-none focus:border-accent" />
                           <span className="text-muted text-xs font-mono">×</span>
                           <input type="number" value={ex.defaultReps} onChange={e => updateExerciseField(idx, 'defaultReps', e.target.value)}
-                            className="w-10 bg-surface border border-border rounded px-1 py-1 text-center font-mono text-xs text-white focus:outline-none focus:border-accent" />
+                            className="w-10 bg-surface border border-border rounded px-1 py-1 text-center font-mono text-xs text-fg focus:outline-none focus:border-accent" />
                         </div>
                         <button onClick={() => removeExercise(idx)} className="text-muted hover:text-accent2 transition-colors shrink-0"><X size={15} /></button>
                       </div>
@@ -417,7 +417,7 @@ export default function Templates() {
                         value={exerciseSearch}
                         onChange={e => setExerciseSearch(e.target.value)}
                         placeholder="Search exercises..."
-                        className="w-full bg-transparent px-3 py-2 font-body text-sm text-white focus:outline-none border-b border-border"
+                        className="w-full bg-transparent px-3 py-2 font-body text-sm text-fg focus:outline-none border-b border-border"
                         autoFocus
                       />
                       <div className="max-h-48 overflow-y-auto">
@@ -430,7 +430,7 @@ export default function Templates() {
                               <button key={ex.id} onClick={() => addExercise(ex)}
                                 className="w-full flex items-center gap-2 px-3 py-2 text-left hover:bg-surface transition-colors">
                                 <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: mc }} />
-                                <span className="font-body text-sm text-white">{ex.name}</span>
+                                <span className="font-body text-sm text-fg">{ex.name}</span>
                                 <span className="text-xs text-muted ml-auto">{ex.muscleGroup}</span>
                               </button>
                             );
@@ -458,7 +458,7 @@ export default function Templates() {
                   SAVE
                 </button>
                 <button onClick={cancelEdit}
-                  className="px-4 bg-surface2 text-muted font-heading text-lg py-2.5 rounded border border-border hover:text-white transition-colors">
+                  className="px-4 bg-surface2 text-muted font-heading text-lg py-2.5 rounded border border-border hover:text-fg transition-colors">
                   CANCEL
                 </button>
               </div>
@@ -471,20 +471,20 @@ export default function Templates() {
       {deleteConfirm && (
         <div className="fixed inset-0 z-50 bg-black/80 flex items-end">
           <div className="w-full bg-surface border-t border-border rounded-t-2xl p-6">
-            <h3 className="font-heading text-2xl text-white mb-2">DELETE TEMPLATE?</h3>
+            <h3 className="font-heading text-2xl text-fg mb-2">DELETE TEMPLATE?</h3>
             <p className="text-muted font-body text-sm mb-6">
               "{templates.find(t => t.id === deleteConfirm)?.name}" will be permanently removed.
             </p>
             <div className="space-y-3">
               <button
                 onClick={() => deleteTemplate(deleteConfirm)}
-                className="w-full bg-accent2 text-white font-heading text-xl py-3 rounded tracking-wider"
+                className="w-full bg-accent2 text-fg font-heading text-xl py-3 rounded tracking-wider"
               >
                 DELETE
               </button>
               <button
                 onClick={() => setDeleteConfirm(null)}
-                className="w-full bg-surface2 text-white font-heading text-xl py-3 rounded tracking-wider border border-border"
+                className="w-full bg-surface2 text-fg font-heading text-xl py-3 rounded tracking-wider border border-border"
               >
                 CANCEL
               </button>

@@ -4,9 +4,14 @@ export default {
   theme: {
     extend: {
       colors: {
-        bg: '#0d0d0d', surface: '#161616', surface2: '#1f1f1f',
-        border: '#2a2a2a', accent: '#e8ff47', accent2: '#ff4747',
-        muted: '#666666',
+        bg:       'var(--color-bg)',
+        surface:  'var(--color-surface)',
+        surface2: 'var(--color-surface2)',
+        border:   'var(--color-border)',
+        fg:       'var(--color-fg)',
+        accent:   'var(--color-accent)',
+        accent2:  'var(--color-accent2)',
+        muted:    'var(--color-muted)',
         push: '#ff6b35', pull: '#4ecdc4', legs: '#a855f7',
         upper: '#3b82f6', lower: '#f59e0b', full: '#e8ff47',
       },

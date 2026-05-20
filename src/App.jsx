@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import BottomNav from './components/BottomNav.jsx';
 import Home from './pages/Home.jsx';
@@ -11,6 +11,11 @@ import Templates from './pages/Templates.jsx';
 import ActiveCardio from './pages/ActiveCardio.jsx';
 
 export default function App() {
+  useEffect(() => {
+    const saved = localStorage.getItem('il_theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', saved);
+  }, []);
+
   return (
     <BrowserRouter basename="/Iromlog">
       <Routes>

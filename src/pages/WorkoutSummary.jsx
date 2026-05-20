@@ -52,7 +52,7 @@ export default function WorkoutSummary() {
             {session.type}
           </span>
         </div>
-        <h1 className="font-heading text-4xl text-white tracking-wide">
+        <h1 className="font-heading text-4xl text-fg tracking-wide">
           {session.templateName}
         </h1>
         <div className="text-sm font-mono text-muted mt-1">
@@ -104,7 +104,7 @@ export default function WorkoutSummary() {
                     <span className="text-bg font-heading text-sm">PR</span>
                   </div>
                   <div>
-                    <div className="font-body font-semibold text-white text-sm">
+                    <div className="font-body font-semibold text-fg text-sm">
                       {ex?.name || pr.exerciseId}
                     </div>
                     <div className="font-mono text-xs text-muted">
@@ -120,7 +120,7 @@ export default function WorkoutSummary() {
 
       {/* Exercise breakdown */}
       <div className="mb-8">
-        <h2 className="font-heading text-2xl text-white mb-3 tracking-wide">EXERCISES</h2>
+        <h2 className="font-heading text-2xl text-fg mb-3 tracking-wide">EXERCISES</h2>
         <div className="space-y-3">
           {session.exercises.map((ex, i) => {
             const exerciseData = exMap[ex.exerciseId];
@@ -141,7 +141,7 @@ export default function WorkoutSummary() {
                   >
                     {exerciseData?.muscleGroup || '—'}
                   </span>
-                  <span className="font-heading text-lg text-white">
+                  <span className="font-heading text-lg text-fg">
                     {exerciseData?.name || ex.exerciseId}
                   </span>
                 </div>
@@ -149,7 +149,7 @@ export default function WorkoutSummary() {
                   {doneSets.map((set, j) => (
                     <div key={j} className="flex items-center gap-3 text-sm">
                       <span className="font-mono text-muted w-4">{j + 1}</span>
-                      <span className="font-mono text-white">
+                      <span className="font-mono text-fg">
                         {set.weight}kg × {set.reps}
                       </span>
                       {set.isPR && (

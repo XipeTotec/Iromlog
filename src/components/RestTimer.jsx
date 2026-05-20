@@ -47,7 +47,7 @@ export default function RestTimer({ timeLeft, duration, isRunning, isActive, onP
       <div className="flex items-center gap-2">
         <button
           onClick={onReset}
-          className="w-9 h-9 rounded-lg bg-surface2 border border-border flex items-center justify-center text-muted hover:text-white transition-colors"
+          className="w-9 h-9 rounded-lg bg-surface2 border border-border flex items-center justify-center text-muted hover:text-fg transition-colors"
           title="Restart"
         >
           <RotateCcw size={15} />

@@ -73,10 +73,10 @@ export default function ActiveCardio() {
     <div className="min-h-screen bg-bg flex flex-col">
       {/* Header */}
       <div className="sticky top-0 z-10 bg-surface border-b border-border px-4 py-3 flex items-center justify-between">
-        <button onClick={() => setShowCancel(true)} className="text-muted hover:text-white transition-colors">
+        <button onClick={() => setShowCancel(true)} className="text-muted hover:text-fg transition-colors">
           <X size={22} />
         </button>
-        <span className="font-heading text-xl text-white tracking-wider">CARDIO</span>
+        <span className="font-heading text-xl text-fg tracking-wider">CARDIO</span>
         <div className="w-6" />
       </div>
 
@@ -135,7 +135,7 @@ export default function ActiveCardio() {
               onChange={e => setDistanceKm(e.target.value)}
               placeholder="0.00"
               step="0.01"
-              className="w-full bg-surface2 border border-border rounded px-3 py-3 font-mono text-2xl text-white text-center focus:outline-none focus:border-accent"
+              className="w-full bg-surface2 border border-border rounded px-3 py-3 font-mono text-2xl text-fg text-center focus:outline-none focus:border-accent"
             />
             {derivedStat && (
               <div className="text-center mt-2 font-mono text-sm" style={{ color }}>
@@ -174,7 +174,7 @@ export default function ActiveCardio() {
                 value={distanceM}
                 onChange={e => setDistanceM(e.target.value)}
                 placeholder="0"
-                className="w-full bg-surface2 border border-border rounded px-3 py-3 font-mono text-2xl text-white text-center focus:outline-none focus:border-accent"
+                className="w-full bg-surface2 border border-border rounded px-3 py-3 font-mono text-2xl text-fg text-center focus:outline-none focus:border-accent"
               />
             </div>
           </>
@@ -189,7 +189,7 @@ export default function ActiveCardio() {
               value={distanceM}
               onChange={e => setDistanceM(e.target.value)}
               placeholder="0"
-              className="w-full bg-surface2 border border-border rounded px-3 py-3 font-mono text-2xl text-white text-center focus:outline-none focus:border-accent"
+              className="w-full bg-surface2 border border-border rounded px-3 py-3 font-mono text-2xl text-fg text-center focus:outline-none focus:border-accent"
             />
             {derivedStat && (
               <div className="text-center mt-2 font-mono text-sm" style={{ color }}>
@@ -208,7 +208,7 @@ export default function ActiveCardio() {
               value={rounds}
               onChange={e => setRounds(e.target.value)}
               placeholder="0"
-              className="w-full bg-surface2 border border-border rounded px-3 py-3 font-mono text-2xl text-white text-center focus:outline-none focus:border-accent"
+              className="w-full bg-surface2 border border-border rounded px-3 py-3 font-mono text-2xl text-fg text-center focus:outline-none focus:border-accent"
             />
           </div>
         )}
@@ -221,7 +221,7 @@ export default function ActiveCardio() {
             onChange={e => setNotes(e.target.value)}
             placeholder="How did it feel?"
             rows={2}
-            className="w-full bg-surface2 border border-border rounded px-3 py-2 font-body text-sm text-white resize-none focus:outline-none focus:border-accent placeholder-muted/40"
+            className="w-full bg-surface2 border border-border rounded px-3 py-2 font-body text-sm text-fg resize-none focus:outline-none focus:border-accent placeholder-muted/40"
           />
         </div>
       </div>
@@ -241,18 +241,18 @@ export default function ActiveCardio() {
       {showCancel && (
         <div className="fixed inset-0 z-50 bg-black/80 flex items-end">
           <div className="w-full bg-surface border-t border-border rounded-t-2xl p-6">
-            <h3 className="font-heading text-2xl text-white mb-2">DISCARD SESSION?</h3>
+            <h3 className="font-heading text-2xl text-fg mb-2">DISCARD SESSION?</h3>
             <p className="text-muted font-body text-sm mb-6">This session won't be saved.</p>
             <div className="space-y-3">
               <button
                 onClick={() => navigate('/')}
-                className="w-full bg-accent2 text-white font-heading text-xl py-3 rounded tracking-wider"
+                className="w-full bg-accent2 text-fg font-heading text-xl py-3 rounded tracking-wider"
               >
                 DISCARD
               </button>
               <button
                 onClick={() => setShowCancel(false)}
-                className="w-full bg-surface2 text-white font-heading text-xl py-3 rounded tracking-wider border border-border"
+                className="w-full bg-surface2 text-fg font-heading text-xl py-3 rounded tracking-wider border border-border"
               >
                 KEEP GOING
               </button>

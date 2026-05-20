@@ -58,7 +58,7 @@ export default function History() {
 
   return (
     <div className="min-h-screen bg-bg pb-24 px-4 pt-6 max-w-lg mx-auto">
-      <h1 className="font-heading text-4xl text-white mb-6 tracking-wide">HISTORY</h1>
+      <h1 className="font-heading text-4xl text-fg mb-6 tracking-wide">HISTORY</h1>
 
       {sessions.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 text-center">
@@ -84,7 +84,7 @@ export default function History() {
                   <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: typeColor }} />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="font-heading text-lg text-white">
+                      <span className="font-heading text-lg text-fg">
                         {isCardio ? CARDIO_TYPES[session.type]?.label : session.templateName}
                       </span>
                       <span
@@ -124,11 +124,11 @@ export default function History() {
                   <div className="border-t border-border px-4 py-3 space-y-3">
                     {isCardio ? (
                       <div className="space-y-1 font-mono text-sm">
-                        {session.stroke && <div className="text-muted">Stroke: <span className="text-white">{session.stroke}</span></div>}
-                        {session.distanceKm && <div className="text-muted">Distance: <span className="text-white">{session.distanceKm} km</span></div>}
-                        {session.distanceM && <div className="text-muted">Distance: <span className="text-white">{session.distanceM} m</span></div>}
-                        {session.rounds && <div className="text-muted">Rounds: <span className="text-white">{session.rounds}</span></div>}
-                        {session.notes && <div className="text-muted">Notes: <span className="text-white">{session.notes}</span></div>}
+                        {session.stroke && <div className="text-muted">Stroke: <span className="text-fg">{session.stroke}</span></div>}
+                        {session.distanceKm && <div className="text-muted">Distance: <span className="text-fg">{session.distanceKm} km</span></div>}
+                        {session.distanceM && <div className="text-muted">Distance: <span className="text-fg">{session.distanceM} m</span></div>}
+                        {session.rounds && <div className="text-muted">Rounds: <span className="text-fg">{session.rounds}</span></div>}
+                        {session.notes && <div className="text-muted">Notes: <span className="text-fg">{session.notes}</span></div>}
                       </div>
                     ) : (
                       session.exercises.map((ex, i) => {
@@ -142,13 +142,13 @@ export default function History() {
                               <span className="text-xs px-1.5 py-0.5 rounded font-body" style={{ backgroundColor: muscleColor + '22', color: muscleColor }}>
                                 {exData?.muscleGroup || '—'}
                               </span>
-                              <span className="font-body font-semibold text-sm text-white">{exData?.name || ex.exerciseId}</span>
+                              <span className="font-body font-semibold text-sm text-fg">{exData?.name || ex.exerciseId}</span>
                             </div>
                             <div className="space-y-0.5 pl-2">
                               {doneSets.map((set, j) => (
                                 <div key={j} className="flex items-center gap-2 text-xs font-mono text-muted">
                                   <span className="w-3">{j + 1}</span>
-                                  <span className="text-white">{set.weight}kg × {set.reps}</span>
+                                  <span className="text-fg">{set.weight}kg × {set.reps}</span>
                                   {set.isPR && <span className="text-accent">PR</span>}
                                 </div>
                               ))}

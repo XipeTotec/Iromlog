@@ -157,7 +157,7 @@ export default function Home() {
                   className="w-full px-4 py-3 flex items-center gap-3 text-left"
                 >
                   <div className="flex-1 min-w-0">
-                    <div className="font-heading text-xl text-white leading-none">{template.name}</div>
+                    <div className="font-heading text-xl text-fg leading-none">{template.name}</div>
                     <div className="text-xs font-body text-muted mt-0.5 uppercase tracking-wider">{template.type}</div>
                   </div>
                   <div className="text-xs font-mono text-muted shrink-0">{formatDate(lastDates[template.id])}</div>
@@ -191,7 +191,7 @@ export default function Home() {
         </div>
 
         {/* Cardio section */}
-        <h2 className="font-heading text-2xl text-white tracking-wider mb-2">CARDIO</h2>
+        <h2 className="font-heading text-2xl text-fg tracking-wider mb-2">CARDIO</h2>
         <div className="space-y-2">
           {Object.entries(CARDIO_TYPES).map(([key, { label, color }]) => {
             const last = lastCardio[key];
@@ -208,7 +208,7 @@ export default function Home() {
                   className="w-full px-4 py-3 flex items-center gap-3 text-left"
                 >
                   <div className="flex-1 min-w-0">
-                    <div className="font-heading text-xl text-white leading-none">{label}</div>
+                    <div className="font-heading text-xl text-fg leading-none">{label}</div>
                     {last && (
                       <div className="text-xs font-mono text-muted mt-0.5 truncate">{cardioSummary(last)}</div>
                     )}
@@ -249,10 +249,10 @@ export default function Home() {
         <div className="fixed inset-0 z-50 bg-black/80 flex items-end">
           <div className="w-full bg-surface border-t border-border rounded-t-2xl p-6 max-h-[85vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="font-heading text-3xl text-white">NEW TEMPLATE</h2>
+              <h2 className="font-heading text-3xl text-fg">NEW TEMPLATE</h2>
               <button
                 onClick={() => { setShowModal(false); setNewName(''); setSelectedExIds([]); setExSearch(''); }}
-                className="text-muted hover:text-white transition-colors"
+                className="text-muted hover:text-fg transition-colors"
               >
                 <X size={24} />
               </button>
@@ -266,7 +266,7 @@ export default function Home() {
                   value={newName}
                   onChange={e => setNewName(e.target.value)}
                   placeholder="e.g. Push Day"
-                  className="w-full bg-surface2 border border-border rounded px-3 py-2 text-white font-body placeholder-muted focus:outline-none focus:border-accent"
+                  className="w-full bg-surface2 border border-border rounded px-3 py-2 text-fg font-body placeholder-muted focus:outline-none focus:border-accent"
                 />
               </div>
 
@@ -298,7 +298,7 @@ export default function Home() {
                     value={exSearch}
                     onChange={e => setExSearch(e.target.value)}
                     placeholder="Search exercises..."
-                    className="w-full bg-surface2 border border-border rounded pl-8 pr-3 py-2 text-white font-body text-sm placeholder-muted focus:outline-none focus:border-accent"
+                    className="w-full bg-surface2 border border-border rounded pl-8 pr-3 py-2 text-fg font-body text-sm placeholder-muted focus:outline-none focus:border-accent"
                   />
                 </div>
                 <div className="max-h-48 overflow-y-auto space-y-1">
@@ -309,7 +309,7 @@ export default function Home() {
                         key={ex.id}
                         onClick={() => setSelectedExIds(prev => isSelected ? prev.filter(id => id !== ex.id) : [...prev, ex.id])}
                         className={`w-full text-left px-3 py-2 rounded text-sm font-body border transition-colors ${
-                          isSelected ? 'bg-accent/10 border-accent text-accent' : 'bg-surface2 border-transparent text-muted hover:text-white hover:border-border'
+                          isSelected ? 'bg-accent/10 border-accent text-accent' : 'bg-surface2 border-transparent text-muted hover:text-fg hover:border-border'
                         }`}
                       >
                         {ex.name}

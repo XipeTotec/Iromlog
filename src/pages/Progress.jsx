@@ -135,7 +135,7 @@ export default function Progress() {
 
   return (
     <div className="min-h-screen bg-bg pb-24 px-4 pt-6 max-w-lg mx-auto">
-      <h1 className="font-heading text-4xl text-white mb-6 tracking-wide">PROGRESS</h1>
+      <h1 className="font-heading text-4xl text-fg mb-6 tracking-wide">PROGRESS</h1>
 
       {/* Range selector */}
       <div className="flex gap-2 mb-6">
@@ -170,7 +170,7 @@ export default function Progress() {
             }}
             onFocus={() => setShowDropdown(true)}
             placeholder="Search exercise..."
-            className="w-full bg-surface2 border border-border rounded pl-8 pr-3 py-2 text-white font-body text-sm placeholder-muted focus:outline-none focus:border-accent"
+            className="w-full bg-surface2 border border-border rounded pl-8 pr-3 py-2 text-fg font-body text-sm placeholder-muted focus:outline-none focus:border-accent"
           />
         </div>
         {showDropdown && filteredExercises.length > 0 && (
@@ -184,7 +184,7 @@ export default function Progress() {
                   setShowDropdown(false);
                 }}
                 className={`w-full text-left px-3 py-2 text-sm font-body hover:bg-surface2 transition-colors ${
-                  ex.id === selectedExId ? 'text-accent' : 'text-white'
+                  ex.id === selectedExId ? 'text-accent' : 'text-fg'
                 }`}
               >
                 {ex.name}
@@ -197,7 +197,7 @@ export default function Progress() {
 
       {/* Weight progress chart */}
       <div className="mb-8">
-        <h2 className="font-heading text-xl text-white mb-3 tracking-wide">
+        <h2 className="font-heading text-xl text-fg mb-3 tracking-wide">
           MAX WEIGHT — {selectedExercise?.name || '—'}
         </h2>
         {weightData.length > 0 ? (
@@ -242,7 +242,7 @@ export default function Progress() {
 
       {/* Volume chart */}
       <div className="mb-8">
-        <h2 className="font-heading text-xl text-white mb-3 tracking-wide">
+        <h2 className="font-heading text-xl text-fg mb-3 tracking-wide">
           SESSION VOLUME — {selectedExercise?.name || '—'}
         </h2>
         {volumeData.length > 0 ? (
@@ -287,7 +287,7 @@ export default function Progress() {
 
       {/* Muscle group volume */}
       <div className="mb-8">
-        <h2 className="font-heading text-xl text-white mb-3 tracking-wide">
+        <h2 className="font-heading text-xl text-fg mb-3 tracking-wide">
           VOLUME BY MUSCLE GROUP
         </h2>
         {muscleVolumeData.length > 0 ? (

@@ -295,12 +295,12 @@ export default function ActiveWorkout() {
         <div className="flex items-center justify-between">
           <button
             onClick={() => setShowCancel(true)}
-            className="text-muted hover:text-white transition-colors p-1"
+            className="text-muted hover:text-fg transition-colors p-1"
           >
             <X size={22} />
           </button>
           <div className="text-center">
-            <div className="font-heading text-xl text-white tracking-wider">
+            <div className="font-heading text-xl text-fg tracking-wider">
               {template?.name || 'WORKOUT'}
             </div>
           </div>
@@ -310,7 +310,7 @@ export default function ActiveWorkout() {
         </div>
         <div className="flex items-center justify-between mt-2">
           <div className="text-sm font-body text-muted">
-            <span className="text-white font-medium">{doneSets}</span> / {totalSets} sets
+            <span className="text-fg font-medium">{doneSets}</span> / {totalSets} sets
           </div>
           <select
             value={restDuration}
@@ -342,7 +342,7 @@ export default function ActiveWorkout() {
             >
               {/* Exercise header */}
               <div className="px-3 py-2.5 flex items-center gap-2 border-b border-border">
-                <span className="font-heading text-lg text-white flex-1 leading-tight">
+                <span className="font-heading text-lg text-fg flex-1 leading-tight">
                   {ex.exercise?.name || ex.exerciseId}
                 </span>
                 <button
@@ -445,7 +445,7 @@ export default function ActiveWorkout() {
                         onChange={e => handleSetChange(exIdx, actualIdx, 'weight', e.target.value)}
                         placeholder={prev ? String(prev.weight) : '0'}
                         className={`flex-1 border rounded px-1 py-2 text-center font-mono text-sm focus:outline-none focus:border-accent ${
-                          set.done ? 'bg-accent/10 border-accent/30 text-accent' : 'bg-surface2 border-border text-white'
+                          set.done ? 'bg-accent/10 border-accent/30 text-accent' : 'bg-surface2 border-border text-fg'
                         }`}
                       />
                       <input
@@ -454,7 +454,7 @@ export default function ActiveWorkout() {
                         onChange={e => handleSetChange(exIdx, actualIdx, 'reps', e.target.value)}
                         placeholder={prev ? String(prev.reps) : '0'}
                         className={`flex-1 border rounded px-1 py-2 text-center font-mono text-sm focus:outline-none focus:border-accent ${
-                          set.done ? 'bg-accent/10 border-accent/30 text-accent' : 'bg-surface2 border-border text-white'
+                          set.done ? 'bg-accent/10 border-accent/30 text-accent' : 'bg-surface2 border-border text-fg'
                         }`}
                       />
                       <div className="relative w-10">
@@ -525,8 +525,8 @@ export default function ActiveWorkout() {
         <div className="fixed inset-0 z-50 bg-black/80 flex items-end">
           <div className="w-full bg-surface border-t border-border rounded-t-2xl flex flex-col max-h-[75vh]">
             <div className="flex items-center justify-between px-4 pt-4 pb-3 shrink-0">
-              <h3 className="font-heading text-2xl text-white">ADD EXERCISE</h3>
-              <button onClick={() => { setShowAddExercise(false); setExSearch(''); }} className="text-muted hover:text-white transition-colors">
+              <h3 className="font-heading text-2xl text-fg">ADD EXERCISE</h3>
+              <button onClick={() => { setShowAddExercise(false); setExSearch(''); }} className="text-muted hover:text-fg transition-colors">
                 <X size={22} />
               </button>
             </div>
@@ -539,7 +539,7 @@ export default function ActiveWorkout() {
                   value={exSearch}
                   onChange={e => setExSearch(e.target.value)}
                   placeholder="Search exercises…"
-                  className="w-full bg-surface2 border border-border rounded pl-8 pr-3 py-2 text-white font-body text-sm placeholder-muted focus:outline-none focus:border-accent"
+                  className="w-full bg-surface2 border border-border rounded pl-8 pr-3 py-2 text-fg font-body text-sm placeholder-muted focus:outline-none focus:border-accent"
                 />
               </div>
             </div>
@@ -555,7 +555,7 @@ export default function ActiveWorkout() {
                       className={`w-full text-left px-3 py-2.5 rounded font-body text-sm border transition-colors ${
                         alreadyAdded
                           ? 'border-transparent text-muted opacity-40 cursor-default'
-                          : 'bg-surface2 border-transparent text-white hover:border-accent hover:text-accent'
+                          : 'bg-surface2 border-transparent text-fg hover:border-accent hover:text-accent'
                       }`}
                     >
                       {ex.name}
@@ -592,18 +592,18 @@ export default function ActiveWorkout() {
       {showCancel && (
         <div className="fixed inset-0 z-50 bg-black/80 flex items-end">
           <div className="w-full bg-surface border-t border-border rounded-t-2xl p-6">
-            <h3 className="font-heading text-2xl text-white mb-2">CANCEL WORKOUT?</h3>
+            <h3 className="font-heading text-2xl text-fg mb-2">CANCEL WORKOUT?</h3>
             <p className="text-muted font-body text-sm mb-6">Your progress will be lost.</p>
             <div className="space-y-3">
               <button
                 onClick={() => navigate('/')}
-                className="w-full bg-accent2 text-white font-heading text-xl py-3 rounded tracking-wider"
+                className="w-full bg-accent2 text-fg font-heading text-xl py-3 rounded tracking-wider"
               >
                 DISCARD WORKOUT
               </button>
               <button
                 onClick={() => setShowCancel(false)}
-                className="w-full bg-surface2 text-white font-heading text-xl py-3 rounded tracking-wider border border-border"
+                className="w-full bg-surface2 text-fg font-heading text-xl py-3 rounded tracking-wider border border-border"
               >
                 KEEP GOING
               </button>

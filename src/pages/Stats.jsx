@@ -3,7 +3,8 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, LineChart, Line, Cell
 } from 'recharts';
-import { Trash2, Key, RefreshCw } from 'lucide-react';
+import { Trash2, Key, RefreshCw, Sun, Moon } from 'lucide-react';
+import { useTheme } from '../hooks/useTheme.js';
 import { clearGifCache } from '../data/exerciseApi.js';
 import { clearExerciseImageCache, getDbStatus, downloadExerciseDb } from '../data/exerciseImages.js';
 import {
@@ -51,6 +52,7 @@ export default function Stats() {
   const [bsFat, setBsFat] = useState('');
   const [dbStatus, setDbStatus] = useState(getDbStatus);
   const [dbLoading, setDbLoading] = useState(false);
+  const { theme, toggle: toggleTheme } = useTheme();
 
   useEffect(() => {
     setSessions(getSessions());
@@ -113,7 +115,7 @@ export default function Stats() {
 
   return (
     <div className="min-h-screen bg-bg pb-24 px-4 pt-6 max-w-lg mx-auto">
-      <h1 className="font-heading text-4xl text-white mb-6 tracking-wide">STATS</h1>
+      <h1 className="font-heading text-4xl text-fg mb-6 tracking-wide">STATS</h1>
 
       {/* Summary cards */}
       <div className="grid grid-cols-2 gap-3 mb-8">
@@ -145,7 +147,7 @@ export default function Stats() {
 
       {/* Muscle Frequency */}
       <div className="mb-8">
-        <h2 className="font-heading text-2xl text-white mb-3 tracking-wide">MUSCLE FREQUENCY</h2>
+        <h2 className="font-heading text-2xl text-fg mb-3 tracking-wide">MUSCLE FREQUENCY</h2>
         {muscleFreqData.length > 0 ? (
           <div className="bg-surface border border-border rounded-lg p-4">
             <ResponsiveContainer width="100%" height={muscleFreqData.length * 44 + 20}>
@@ -195,7 +197,7 @@ export default function Stats() {
 
       {/* Personal Records */}
       <div className="mb-8">
-        <h2 className="font-heading text-2xl text-white mb-3 tracking-wide">PERSONAL RECORDS</h2>
+        <h2 className="font-heading text-2xl text-fg mb-3 tracking-wide">PERSONAL RECORDS</h2>
         {prList.length > 0 ? (
           <div className="space-y-2">
             {prList.map(pr => {
@@ -207,7 +209,7 @@ export default function Stats() {
                 >
                   <div className="flex items-start justify-between">
                     <div>
-                      <div className="font-body font-semibold text-white text-sm">
+                      <div className="font-body font-semibold text-fg text-sm">
                         {ex?.name || pr.exerciseId}
                       </div>
                       {pr.date && (
@@ -228,15 +230,15 @@ export default function Stats() {
                   <div className="mt-2 pt-2 border-t border-border flex gap-4">
                     <div>
                       <div className="text-xs text-muted font-body">Max Weight</div>
-                      <div className="font-mono text-sm text-white">{pr.maxWeight}kg</div>
+                      <div className="font-mono text-sm text-fg">{pr.maxWeight}kg</div>
                     </div>
                     <div>
                       <div className="text-xs text-muted font-body">Max Reps</div>
-                      <div className="font-mono text-sm text-white">{pr.maxReps}</div>
+                      <div className="font-mono text-sm text-fg">{pr.maxReps}</div>
                     </div>
                     <div>
                       <div className="text-xs text-muted font-body">Max Volume</div>
-                      <div className="font-mono text-sm text-white">{Math.round(pr.maxVolume)}kg</div>
+                      <div className="font-mono text-sm text-fg">{Math.round(pr.maxVolume)}kg</div>
                     </div>
                   </div>
                 </div>
@@ -252,7 +254,7 @@ export default function Stats() {
 
       {/* Body Stats */}
       <div className="mb-8">
-        <h2 className="font-heading text-2xl text-white mb-3 tracking-wide">BODY STATS</h2>
+        <h2 className="font-heading text-2xl text-fg mb-3 tracking-wide">BODY STATS</h2>
 
         {/* Add form */}
         <div className="bg-surface border border-border rounded-lg p-4 mb-4">
@@ -263,7 +265,7 @@ export default function Stats() {
                 type="date"
                 value={bsDate}
                 onChange={e => setBsDate(e.target.value)}
-                className="w-full bg-surface2 border border-border rounded px-2 py-2 text-white font-mono text-xs focus:outline-none focus:border-accent"
+                className="w-full bg-surface2 border border-border rounded px-2 py-2 text-fg font-mono text-xs focus:outline-none focus:border-accent"
               />
             </div>
             <div>
@@ -273,7 +275,7 @@ export default function Stats() {
                 value={bsWeight}
                 onChange={e => setBsWeight(e.target.value)}
                 placeholder="75.0"
-                className="w-full bg-surface2 border border-border rounded px-2 py-2 text-white font-mono text-xs focus:outline-none focus:border-accent"
+                className="w-full bg-surface2 border border-border rounded px-2 py-2 text-fg font-mono text-xs focus:outline-none focus:border-accent"
               />
             </div>
             <div>
@@ -283,7 +285,7 @@ export default function Stats() {
                 value={bsFat}
                 onChange={e => setBsFat(e.target.value)}
                 placeholder="Optional"
-                className="w-full bg-surface2 border border-border rounded px-2 py-2 text-white font-mono text-xs focus:outline-none focus:border-accent"
+                className="w-full bg-surface2 border border-border rounded px-2 py-2 text-fg font-mono text-xs focus:outline-none focus:border-accent"
               />
             </div>
           </div>
@@ -342,7 +344,7 @@ export default function Stats() {
               >
                 <div>
                   <div className="font-mono text-xs text-muted">{formatDate(bs.date)}</div>
-                  <div className="font-mono text-sm text-white mt-0.5">
+                  <div className="font-mono text-sm text-fg mt-0.5">
                     {bs.weight}kg
                     {bs.bodyFat !== null && bs.bodyFat !== undefined && (
                       <span className="text-muted ml-2">{bs.bodyFat}% BF</span>
@@ -366,7 +368,7 @@ export default function Stats() {
 
       {/* Settings */}
       <div className="px-4 pb-8">
-        <h2 className="font-heading text-2xl text-white tracking-wider mb-3 flex items-center gap-2">
+        <h2 className="font-heading text-2xl text-fg tracking-wider mb-3 flex items-center gap-2">
           <Key size={18} className="text-muted" /> SETTINGS
         </h2>
         <div className="bg-surface border border-border rounded-lg p-4 space-y-4">
@@ -396,7 +398,7 @@ export default function Stats() {
                     setDbLoading(false);
                   }
                 }}
-                className="w-full flex items-center justify-center gap-2 border border-border rounded py-2 font-heading text-base tracking-wider text-muted hover:text-white hover:border-white transition-colors disabled:opacity-40"
+                className="w-full flex items-center justify-center gap-2 border border-border rounded py-2 font-heading text-base tracking-wider text-muted hover:text-fg hover:border-white transition-colors disabled:opacity-40"
               >
                 {dbLoading ? 'Downloading…' : 'DOWNLOAD (~2MB)'}
               </button>
@@ -409,10 +411,23 @@ export default function Stats() {
             </label>
             <button
               onClick={() => { clearGifCache(); clearExerciseImageCache(); alert('Image cache cleared.'); }}
-              className="w-full mb-3 border border-border rounded py-2 font-heading text-base tracking-wider text-muted hover:text-white hover:border-white transition-colors"
+              className="w-full mb-3 border border-border rounded py-2 font-heading text-base tracking-wider text-muted hover:text-fg hover:border-white transition-colors"
             >
               CLEAR GIF CACHE
             </button>
+          </div>
+
+          <div className="pt-2 border-t border-border">
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-body text-muted uppercase tracking-wider">Theme</label>
+              <button
+                onClick={toggleTheme}
+                className="flex items-center gap-2 px-3 py-1.5 rounded border border-border text-sm font-body text-muted hover:text-fg hover:border-fg transition-colors"
+              >
+                {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
+                {theme === 'dark' ? 'Light mode' : 'Dark mode'}
+              </button>
+            </div>
           </div>
 
           <div className="pt-2 border-t border-border">
@@ -431,7 +446,7 @@ export default function Stats() {
                 }
                 window.location.reload();
               }}
-              className="w-full flex items-center justify-center gap-2 border border-border rounded py-2 font-heading text-base tracking-wider text-muted hover:text-white hover:border-white transition-colors"
+              className="w-full flex items-center justify-center gap-2 border border-border rounded py-2 font-heading text-base tracking-wider text-muted hover:text-fg hover:border-white transition-colors"
             >
               <RefreshCw size={15} /> HARD RELOAD
             </button>
