@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { X, Check, Plus, PlayCircle, TrendingUp, Search } from 'lucide-react';
+import { X, Check, Plus, PlayCircle, TrendingUp, Search, Trash2 } from 'lucide-react';
 import { fetchExerciseImage } from '../data/exerciseImages.js';
 import { fetchExerciseGif } from '../data/exerciseApi.js';
 import ExerciseDemo from '../components/ExerciseDemo.jsx';
@@ -260,6 +260,10 @@ export default function ActiveWorkout() {
     }));
   }
 
+  function handleDeleteExercise(exIdx) {
+    setExercises(prev => prev.filter((_, i) => i !== exIdx));
+  }
+
   function handleAddExercise(exercise) {
     setExercises(prev => [
       ...prev,
@@ -351,6 +355,13 @@ export default function ActiveWorkout() {
                   title="Show demo"
                 >
                   <PlayCircle size={18} />
+                </button>
+                <button
+                  onClick={() => handleDeleteExercise(exIdx)}
+                  className="shrink-0 text-muted hover:text-accent2 transition-colors"
+                  title="Remove exercise"
+                >
+                  <Trash2 size={16} />
                 </button>
               </div>
 

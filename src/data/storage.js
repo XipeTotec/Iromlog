@@ -241,3 +241,13 @@ export function saveCardioSession(session) {
 export function deleteCardioSession(id) {
   writeJSON(KEYS.cardio, getCardioSessions().filter(s => s.id !== id));
 }
+
+export function updateWorkoutSession(id, updates) {
+  const all = readJSON(KEYS.sessions, []);
+  writeJSON(KEYS.sessions, all.map(s => s.id === id ? { ...s, ...updates } : s));
+}
+
+export function updateCardioSession(id, updates) {
+  const all = readJSON(KEYS.cardio, []);
+  writeJSON(KEYS.cardio, all.map(s => s.id === id ? { ...s, ...updates } : s));
+}
