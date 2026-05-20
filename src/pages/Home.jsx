@@ -176,7 +176,13 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Floating new template button */}
+      {/* Floating buttons */}
+      <button
+        onClick={() => navigate('/cardio/active')}
+        className="fixed bottom-20 left-4 z-30 bg-surface border border-border text-white px-4 py-3 rounded-lg font-heading text-lg tracking-wider flex items-center gap-2 hover:border-accent hover:text-accent transition-colors shadow-lg"
+      >
+        CARDIO
+      </button>
       <button
         onClick={() => setShowModal(true)}
         className="fixed bottom-20 right-4 z-30 bg-accent text-bg px-4 py-3 rounded-lg font-heading text-lg tracking-wider flex items-center gap-2 hover:opacity-90 transition-opacity shadow-lg"

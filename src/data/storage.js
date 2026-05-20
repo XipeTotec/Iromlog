@@ -8,6 +8,7 @@ const KEYS = {
   prs: 'il_prs',
   bodyStats: 'il_body_stats',
   settings: 'il_settings',
+  cardio: 'il_cardio',
 };
 
 function readJSON(key, fallback) {
@@ -226,4 +227,17 @@ export function getMuscleFrequency() {
 export function getLastSessionForTemplate(templateId) {
   const sessions = getSessions();
   return sessions.find(s => s.templateId === templateId) || null;
+}
+
+export function getCardioSessions() {
+  return readJSON(KEYS.cardio, []);
+}
+
+export function saveCardioSession(session) {
+  const all = getCardioSessions();
+  writeJSON(KEYS.cardio, [session, ...all]);
+}
+
+export function deleteCardioSession(id) {
+  writeJSON(KEYS.cardio, getCardioSessions().filter(s => s.id !== id));
 }

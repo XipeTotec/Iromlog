@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronDown, ChevronUp, Trash2 } from 'lucide-react';
-import { getSessions, saveSessions } from '../data/storage.js';
+import { getSessions, saveSessions, getCardioSessions, deleteCardioSession } from '../data/storage.js';
 import { getExercises } from '../data/storage.js';
 import { MUSCLE_COLORS } from '../data/exercises.js';
+import { CARDIO_TYPES } from '../data/cardioTypes.js';
 import { formatTime } from '../hooks/useTimer.js';
 
 const TYPE_COLORS = {
@@ -30,7 +31,10 @@ export default function History() {
   const [exercises, setExercises] = useState([]);
 
   useEffect(() => {
-    setSessions(getSessions());
+    const weights = getSessions();
+    const cardio = getCardioSessions();
+    const merged = [...weights, ...cardio].sort((a, b) => new Date(b.date) - new Date(a.date));
+    setSessions(merged);
     setExercises(getExercises());
   }, []);
 
@@ -41,12 +45,15 @@ export default function History() {
     setExpanded(prev => ({ ...prev, [id]: !prev[id] }));
   }
 
-  function handleDelete(sessionId) {
+  function handleDelete(session) {
     if (!confirm('Delete this session? This cannot be undone.')) return;
-    const all = getSessions();
-    const updated = all.filter(s => s.id !== sessionId);
-    saveSessions(updated);
-    setSessions(updated);
+    if (session.kind === 'cardio') {
+      deleteCardioSession(session.id);
+    } else {
+      const updated = getSessions().filter(s => s.id !== session.id);
+      saveSessions(updated);
+    }
+    setSessions(prev => prev.filter(s => s.id !== session.id));
   }
 
   return (
@@ -62,102 +69,99 @@ export default function History() {
       ) : (
         <div className="space-y-3">
           {sessions.map(session => {
-            const typeColor = TYPE_COLORS[session.type] || '#e8ff47';
+            const isCardio = session.kind === 'cardio';
+            const typeColor = isCardio
+              ? (CARDIO_TYPES[session.type]?.color || '#6b7280')
+              : (TYPE_COLORS[session.type] || '#e8ff47');
             const isOpen = expanded[session.id];
 
             return (
-              <div
-                key={session.id}
-                className="bg-surface border border-border rounded-lg overflow-hidden"
-              >
-                {/* Row header */}
+              <div key={session.id} className="bg-surface border border-border rounded-lg overflow-hidden">
                 <button
                   onClick={() => toggleExpand(session.id)}
                   className="w-full px-4 py-3 flex items-center gap-3 text-left"
                 >
-                  <div
-                    className="w-2 h-2 rounded-full flex-shrink-0"
-                    style={{ backgroundColor: typeColor }}
-                  />
+                  <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: typeColor }} />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
                       <span className="font-heading text-lg text-white">
-                        {session.templateName}
+                        {isCardio ? CARDIO_TYPES[session.type]?.label : session.templateName}
                       </span>
                       <span
                         className="text-xs font-body uppercase px-1.5 py-0.5 rounded"
-                        style={{
-                          backgroundColor: typeColor + '22',
-                          color: typeColor,
-                        }}
+                        style={{ backgroundColor: typeColor + '22', color: typeColor }}
                       >
-                        {session.type}
+                        {isCardio ? 'cardio' : session.type}
                       </span>
                     </div>
-                    <div className="text-xs font-mono text-muted mt-0.5">
-                      {formatDate(session.date)}
-                    </div>
+                    <div className="text-xs font-mono text-muted mt-0.5">{formatDate(session.date)}</div>
                   </div>
                   <div className="text-right flex-shrink-0">
                     <div className="text-xs font-mono text-muted">{formatTime(session.durationSeconds)}</div>
-                    <div className="text-xs font-mono text-muted">{session.totalSets} sets</div>
-                    <div className="text-xs font-mono text-accent">
-                      {session.totalVolume >= 1000
-                        ? `${(session.totalVolume / 1000).toFixed(1)}t`
-                        : `${Math.round(session.totalVolume)}kg`}
-                    </div>
+                    {isCardio ? (
+                      <div className="text-xs font-mono" style={{ color: typeColor }}>
+                        {session.distanceKm ? `${session.distanceKm} km` : ''}
+                        {session.distanceM ? `${session.distanceM} m` : ''}
+                        {session.rounds ? `${session.rounds} rounds` : ''}
+                      </div>
+                    ) : (
+                      <>
+                        <div className="text-xs font-mono text-muted">{session.totalSets} sets</div>
+                        <div className="text-xs font-mono text-accent">
+                          {session.totalVolume >= 1000
+                            ? `${(session.totalVolume / 1000).toFixed(1)}t`
+                            : `${Math.round(session.totalVolume)}kg`}
+                        </div>
+                      </>
+                    )}
                   </div>
                   <div className="ml-1 text-muted flex-shrink-0">
                     {isOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
                   </div>
                 </button>
 
-                {/* Expanded detail */}
                 {isOpen && (
-                  <div className="border-t border-border px-4 py-3 space-y-4">
-                    {session.exercises.map((ex, i) => {
-                      const exData = exMap[ex.exerciseId];
-                      const muscleColor = MUSCLE_COLORS[exData?.muscleGroup] || '#666';
-                      const doneSets = ex.sets.filter(s => s.done && !s.isWarmup);
-                      if (doneSets.length === 0) return null;
-
-                      return (
-                        <div key={i}>
-                          <div className="flex items-center gap-2 mb-1.5">
-                            <span
-                              className="text-xs px-1.5 py-0.5 rounded font-body"
-                              style={{
-                                backgroundColor: muscleColor + '22',
-                                color: muscleColor,
-                              }}
-                            >
-                              {exData?.muscleGroup || '—'}
-                            </span>
-                            <span className="font-body font-semibold text-sm text-white">
-                              {exData?.name || ex.exerciseId}
-                            </span>
+                  <div className="border-t border-border px-4 py-3 space-y-3">
+                    {isCardio ? (
+                      <div className="space-y-1 font-mono text-sm">
+                        {session.stroke && <div className="text-muted">Stroke: <span className="text-white">{session.stroke}</span></div>}
+                        {session.distanceKm && <div className="text-muted">Distance: <span className="text-white">{session.distanceKm} km</span></div>}
+                        {session.distanceM && <div className="text-muted">Distance: <span className="text-white">{session.distanceM} m</span></div>}
+                        {session.rounds && <div className="text-muted">Rounds: <span className="text-white">{session.rounds}</span></div>}
+                        {session.notes && <div className="text-muted">Notes: <span className="text-white">{session.notes}</span></div>}
+                      </div>
+                    ) : (
+                      session.exercises.map((ex, i) => {
+                        const exData = exMap[ex.exerciseId];
+                        const muscleColor = MUSCLE_COLORS[exData?.muscleGroup] || '#666';
+                        const doneSets = ex.sets.filter(s => s.done && !s.isWarmup);
+                        if (!doneSets.length) return null;
+                        return (
+                          <div key={i}>
+                            <div className="flex items-center gap-2 mb-1.5">
+                              <span className="text-xs px-1.5 py-0.5 rounded font-body" style={{ backgroundColor: muscleColor + '22', color: muscleColor }}>
+                                {exData?.muscleGroup || '—'}
+                              </span>
+                              <span className="font-body font-semibold text-sm text-white">{exData?.name || ex.exerciseId}</span>
+                            </div>
+                            <div className="space-y-0.5 pl-2">
+                              {doneSets.map((set, j) => (
+                                <div key={j} className="flex items-center gap-2 text-xs font-mono text-muted">
+                                  <span className="w-3">{j + 1}</span>
+                                  <span className="text-white">{set.weight}kg × {set.reps}</span>
+                                  {set.isPR && <span className="text-accent">PR</span>}
+                                </div>
+                              ))}
+                            </div>
                           </div>
-                          <div className="space-y-0.5 pl-2">
-                            {doneSets.map((set, j) => (
-                              <div key={j} className="flex items-center gap-2 text-xs font-mono text-muted">
-                                <span className="w-3">{j + 1}</span>
-                                <span className="text-white">{set.weight}kg × {set.reps}</span>
-                                {set.isPR && (
-                                  <span className="text-accent text-xs font-body">PR</span>
-                                )}
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      );
-                    })}
-
+                        );
+                      })
+                    )}
                     <button
-                      onClick={() => handleDelete(session.id)}
-                      className="flex items-center gap-2 text-accent2 text-sm font-body hover:opacity-80 transition-opacity mt-2"
+                      onClick={() => handleDelete(session)}
+                      className="flex items-center gap-2 text-accent2 text-sm font-body hover:opacity-80 transition-opacity pt-1"
                     >
-                      <Trash2 size={14} />
-                      Delete Session
+                      <Trash2 size={14} /> Delete Session
                     </button>
                   </div>
                 )}
