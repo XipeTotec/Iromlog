@@ -3,8 +3,6 @@ export const CARDIO_TYPES = {
   swim: { label: 'Swim', color: '#3b82f6' },
   bike: { label: 'Bike', color: '#10b981' },
   row:  { label: 'Row',  color: '#8b5cf6' },
-  walk: { label: 'Walk', color: '#6b7280' },
-  hiit: { label: 'HIIT', color: '#ef4444' },
 };
 
 export const SWIM_STROKES = ['Freestyle', 'Breaststroke', 'Backstroke', 'Butterfly', 'IM', 'Mixed'];

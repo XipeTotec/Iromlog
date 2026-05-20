@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { X, Check, Plus, ChevronDown, PlayCircle, TrendingUp } from 'lucide-react';
+import { X, Check, Plus, PlayCircle, TrendingUp, Search } from 'lucide-react';
 import { fetchExerciseImage } from '../data/exerciseImages.js';
 import { fetchExerciseGif } from '../data/exerciseApi.js';
 import ExerciseDemo from '../components/ExerciseDemo.jsx';
@@ -11,6 +11,7 @@ import {
   getSessions,
   getSettings,
   saveSettings,
+  getExercises,
 } from '../data/storage.js';
 import { MUSCLE_COLORS } from '../data/exercises.js';
 import RestTimer from '../components/RestTimer.jsx';
@@ -59,6 +60,9 @@ export default function ActiveWorkout() {
   });
 
   const [showCancel, setShowCancel] = useState(false);
+  const [showAddExercise, setShowAddExercise] = useState(false);
+  const [exSearch, setExSearch] = useState('');
+  const [allExercises] = useState(() => getExercises());
   const [prToast, setPrToast] = useState({ show: false, exerciseName: '', fields: [] });
   const [gifExpanded, setGifExpanded] = useState({});
   const [gifUrls, setGifUrls] = useState({});
@@ -254,6 +258,28 @@ export default function ActiveWorkout() {
         sets: ex.sets.map(s => s.isWarmup ? s : { ...s, weight: String(weight) }),
       };
     }));
+  }
+
+  function handleAddExercise(exercise) {
+    setExercises(prev => [
+      ...prev,
+      {
+        exerciseId: exercise.id,
+        exercise,
+        sets: [{
+          id: `set-0-${Date.now()}`,
+          setNumber: 1,
+          weight: '',
+          reps: '',
+          done: false,
+          isWarmup: false,
+          isPR: false,
+        }],
+        prevSets: [],
+      },
+    ]);
+    setShowAddExercise(false);
+    setExSearch('');
   }
 
   function handleRestDurationChange(val) {
@@ -471,6 +497,16 @@ export default function ActiveWorkout() {
         })}
       </div>
 
+      {/* Add exercise button */}
+      <div className="px-3 pt-2 pb-4">
+        <button
+          onClick={() => setShowAddExercise(true)}
+          className="w-full flex items-center justify-center gap-2 py-3 border border-dashed border-border rounded-lg text-sm font-body text-muted hover:text-accent hover:border-accent transition-colors"
+        >
+          <Plus size={15} /> ADD EXERCISE
+        </button>
+      </div>
+
       {/* Finish button */}
       <div
         className="fixed bottom-0 left-0 right-0 z-20 px-4 py-3 bg-bg border-t border-border"
@@ -478,11 +514,59 @@ export default function ActiveWorkout() {
       >
         <button
           onClick={handleFinish}
-          className="w-full max-w-lg mx-auto block bg-accent text-bg font-heading text-2xl py-4 rounded tracking-wider hover:opacity-90 transition-opacity"
+          className="w-full bg-accent text-bg font-heading text-2xl py-4 rounded tracking-wider hover:opacity-90 transition-opacity"
         >
           FINISH WORKOUT
         </button>
       </div>
+
+      {/* Add exercise picker */}
+      {showAddExercise && (
+        <div className="fixed inset-0 z-50 bg-black/80 flex items-end">
+          <div className="w-full bg-surface border-t border-border rounded-t-2xl flex flex-col max-h-[75vh]">
+            <div className="flex items-center justify-between px-4 pt-4 pb-3 shrink-0">
+              <h3 className="font-heading text-2xl text-white">ADD EXERCISE</h3>
+              <button onClick={() => { setShowAddExercise(false); setExSearch(''); }} className="text-muted hover:text-white transition-colors">
+                <X size={22} />
+              </button>
+            </div>
+            <div className="px-4 pb-3 shrink-0">
+              <div className="relative">
+                <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
+                <input
+                  autoFocus
+                  type="text"
+                  value={exSearch}
+                  onChange={e => setExSearch(e.target.value)}
+                  placeholder="Search exercises…"
+                  className="w-full bg-surface2 border border-border rounded pl-8 pr-3 py-2 text-white font-body text-sm placeholder-muted focus:outline-none focus:border-accent"
+                />
+              </div>
+            </div>
+            <div className="overflow-y-auto px-4 pb-6 space-y-1">
+              {allExercises
+                .filter(e => e.name.toLowerCase().includes(exSearch.toLowerCase()))
+                .map(ex => {
+                  const alreadyAdded = exercises.some(e => e.exerciseId === ex.id);
+                  return (
+                    <button
+                      key={ex.id}
+                      onClick={() => !alreadyAdded && handleAddExercise(ex)}
+                      className={`w-full text-left px-3 py-2.5 rounded font-body text-sm border transition-colors ${
+                        alreadyAdded
+                          ? 'border-transparent text-muted opacity-40 cursor-default'
+                          : 'bg-surface2 border-transparent text-white hover:border-accent hover:text-accent'
+                      }`}
+                    >
+                      {ex.name}
+                      <span className="ml-2 text-xs opacity-50">{ex.muscleGroup}</span>
+                    </button>
+                  );
+                })}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Rest timer */}
       <RestTimer
