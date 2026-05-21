@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { X, Check, Plus, PlayCircle, TrendingUp, Search, Trash2 } from 'lucide-react';
+import { X, Check, Plus, PlayCircle, TrendingUp, Search, Trash2, RotateCcw } from 'lucide-react';
 import { fetchExerciseImage } from '../data/exerciseImages.js';
 import ExerciseDemo from '../components/ExerciseDemo.jsx';
 import { useStopwatch, useRestTimer, formatTime } from '../hooks/useTimer.js';
@@ -485,9 +485,10 @@ export default function ActiveWorkout() {
                   const doneInput = set.done ? 'bg-accent/10 border-accent/30 text-accent' : 'bg-surface2 border-border text-fg';
                   return (
                     <div key={set.id} className="flex items-center gap-2">
-                      <div className="w-6 flex items-center justify-center">
-                        <span className={`text-sm font-mono ${set.done ? 'text-accent' : 'text-muted'}`}>{set.setNumber}</span>
-                      </div>
+                      <button onClick={() => handleDeleteSet(exIdx, actualIdx)}
+                        className="shrink-0 w-6 h-11 flex items-center justify-center text-muted hover:text-red-400 transition-colors">
+                        <X size={13} />
+                      </button>
                       <div className="flex items-center gap-0.5 w-28 shrink-0">
                         <button onPointerDown={() => startFieldHold(exIdx, actualIdx, 'weight', -2.5)} onPointerUp={stopHold} onPointerLeave={stopHold}
                           className={`shrink-0 w-7 h-11 flex items-center justify-center border rounded text-lg select-none touch-none transition-colors ${doneCls}`}>−</button>
@@ -506,11 +507,6 @@ export default function ActiveWorkout() {
                         <button onPointerDown={() => startFieldHold(exIdx, actualIdx, 'reps', 1)} onPointerUp={stopHold} onPointerLeave={stopHold}
                           className={`shrink-0 w-6 h-11 flex items-center justify-center border rounded text-lg select-none touch-none transition-colors ${doneCls}`}>+</button>
                       </div>
-                      <div className="flex-1" />
-                      <button onClick={() => handleDeleteSet(exIdx, actualIdx)}
-                        className="shrink-0 w-6 h-6 flex items-center justify-center text-muted hover:text-accent transition-colors">
-                        <X size={12} />
-                      </button>
                       <div className="relative w-11">
                         <button onClick={() => handleSetDone(exIdx, actualIdx)}
                           className={`w-11 h-11 rounded flex items-center justify-center border transition-colors ${
@@ -533,9 +529,9 @@ export default function ActiveWorkout() {
               <div className="px-3 pb-3 flex gap-2">
                 <button
                   onClick={() => handleAddSet(exIdx)}
-                  className="flex-1 flex items-center justify-center gap-1 py-3 text-xs font-body text-muted border border-border rounded hover:border-accent hover:text-accent transition-colors"
+                  className="flex-1 flex items-center justify-center py-3 text-muted border border-border rounded hover:border-accent hover:text-accent transition-colors"
                 >
-                  <Plus size={12} /> COPY LAST SET
+                  <RotateCcw size={15} />
                 </button>
                 <button
                   onClick={() => handleAddWarmup(exIdx)}
