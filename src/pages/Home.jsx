@@ -266,7 +266,7 @@ export default function Home() {
                   value={newName}
                   onChange={e => setNewName(e.target.value)}
                   placeholder="e.g. Push Day"
-                  className="w-full bg-surface2 border border-border rounded px-3 py-2 text-fg font-body placeholder-muted focus:outline-none focus:border-accent"
+                  className="w-full bg-surface2 border border-border rounded px-3 py-3 text-base text-fg font-body placeholder-muted focus:outline-none focus:border-accent"
                 />
               </div>
 
@@ -298,7 +298,7 @@ export default function Home() {
                     value={exSearch}
                     onChange={e => setExSearch(e.target.value)}
                     placeholder="Search exercises..."
-                    className="w-full bg-surface2 border border-border rounded pl-8 pr-3 py-2 text-fg font-body text-sm placeholder-muted focus:outline-none focus:border-accent"
+                    className="w-full bg-surface2 border border-border rounded pl-8 pr-3 py-3 text-base text-fg font-body placeholder-muted focus:outline-none focus:border-accent"
                   />
                 </div>
                 <div className="max-h-48 overflow-y-auto space-y-1">
@@ -308,7 +308,7 @@ export default function Home() {
                       <button
                         key={ex.id}
                         onClick={() => setSelectedExIds(prev => isSelected ? prev.filter(id => id !== ex.id) : [...prev, ex.id])}
-                        className={`w-full text-left px-3 py-2 rounded text-sm font-body border transition-colors ${
+                        className={`w-full text-left px-3 py-3 rounded text-base font-body border transition-colors ${
                           isSelected ? 'bg-accent/10 border-accent text-accent' : 'bg-surface2 border-transparent text-muted hover:text-fg hover:border-border'
                         }`}
                       >

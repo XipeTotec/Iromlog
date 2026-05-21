@@ -247,7 +247,7 @@ export default function History() {
                   type="datetime-local"
                   value={toDatetimeLocal(editingSession.date)}
                   onChange={e => setEditingSession(prev => ({ ...prev, date: new Date(e.target.value).toISOString() }))}
-                  className="w-full bg-surface2 border border-border rounded px-3 py-2 text-fg font-mono text-sm focus:outline-none focus:border-accent"
+                  className="w-full bg-surface2 border border-border rounded px-3 py-3 text-base text-fg font-mono focus:outline-none focus:border-accent"
                 />
               </div>
 
@@ -259,7 +259,7 @@ export default function History() {
                   min="0"
                   value={Math.round((editingSession.durationSeconds || 0) / 60)}
                   onChange={e => setEditingSession(prev => ({ ...prev, durationSeconds: (parseInt(e.target.value) || 0) * 60 }))}
-                  className="w-full bg-surface2 border border-border rounded px-3 py-2 text-fg font-mono text-sm focus:outline-none focus:border-accent"
+                  className="w-full bg-surface2 border border-border rounded px-3 py-3 text-base text-fg font-mono focus:outline-none focus:border-accent"
                 />
               </div>
 
@@ -272,7 +272,7 @@ export default function History() {
                       type="text"
                       value={editingSession.templateName || ''}
                       onChange={e => setEditingSession(prev => ({ ...prev, templateName: e.target.value }))}
-                      className="w-full bg-surface2 border border-border rounded px-3 py-2 text-fg font-body text-sm focus:outline-none focus:border-accent"
+                      className="w-full bg-surface2 border border-border rounded px-3 py-3 text-base text-fg font-body focus:outline-none focus:border-accent"
                     />
                   </div>
 
@@ -304,7 +304,7 @@ export default function History() {
                                 value={set.weight}
                                 onChange={e => handleSetEdit(exIdx, setIdx, 'weight', e.target.value)}
                                 placeholder="0"
-                                className="flex-1 bg-surface2 border border-border rounded px-2 py-1.5 text-center font-mono text-sm text-fg focus:outline-none focus:border-accent"
+                                className="flex-1 bg-surface2 border border-border rounded px-2 py-3 text-center font-mono text-base text-fg focus:outline-none focus:border-accent"
                               />
                               <span className="w-4 text-xs text-muted text-center">×</span>
                               <input
@@ -312,7 +312,7 @@ export default function History() {
                                 value={set.reps}
                                 onChange={e => handleSetEdit(exIdx, setIdx, 'reps', e.target.value)}
                                 placeholder="0"
-                                className="flex-1 bg-surface2 border border-border rounded px-2 py-1.5 text-center font-mono text-sm text-fg focus:outline-none focus:border-accent"
+                                className="flex-1 bg-surface2 border border-border rounded px-2 py-3 text-center font-mono text-base text-fg focus:outline-none focus:border-accent"
                               />
                             </div>
                           ))}
@@ -335,7 +335,7 @@ export default function History() {
                         min="0"
                         value={editingSession.distanceKm || ''}
                         onChange={e => setEditingSession(prev => ({ ...prev, distanceKm: parseFloat(e.target.value) || 0 }))}
-                        className="w-full bg-surface2 border border-border rounded px-3 py-2 text-fg font-mono text-sm focus:outline-none focus:border-accent"
+                        className="w-full bg-surface2 border border-border rounded px-3 py-3 text-base text-fg font-mono focus:outline-none focus:border-accent"
                       />
                     </div>
                   )}
@@ -349,7 +349,7 @@ export default function History() {
                           min="0"
                           value={editingSession.distanceM || ''}
                           onChange={e => setEditingSession(prev => ({ ...prev, distanceM: parseInt(e.target.value) || 0 }))}
-                          className="w-full bg-surface2 border border-border rounded px-3 py-2 text-fg font-mono text-sm focus:outline-none focus:border-accent"
+                          className="w-full bg-surface2 border border-border rounded px-3 py-3 text-base text-fg font-mono focus:outline-none focus:border-accent"
                         />
                       </div>
                       <div>
@@ -359,7 +359,7 @@ export default function History() {
                             <button
                               key={stroke}
                               onClick={() => setEditingSession(prev => ({ ...prev, stroke }))}
-                              className={`px-3 py-1.5 rounded text-sm font-body border transition-colors ${
+                              className={`px-4 py-2.5 rounded text-base font-body border transition-colors ${
                                 editingSession.stroke === stroke
                                   ? 'bg-accent text-bg border-accent'
                                   : 'bg-surface2 border-border text-fg hover:border-accent'
@@ -381,7 +381,7 @@ export default function History() {
                         min="0"
                         value={editingSession.distanceM || ''}
                         onChange={e => setEditingSession(prev => ({ ...prev, distanceM: parseInt(e.target.value) || 0 }))}
-                        className="w-full bg-surface2 border border-border rounded px-3 py-2 text-fg font-mono text-sm focus:outline-none focus:border-accent"
+                        className="w-full bg-surface2 border border-border rounded px-3 py-3 text-base text-fg font-mono focus:outline-none focus:border-accent"
                       />
                     </div>
                   )}
@@ -392,7 +392,7 @@ export default function History() {
                       rows={2}
                       value={editingSession.notes || ''}
                       onChange={e => setEditingSession(prev => ({ ...prev, notes: e.target.value }))}
-                      className="w-full bg-surface2 border border-border rounded px-3 py-2 text-fg font-body text-sm focus:outline-none focus:border-accent resize-none"
+                      className="w-full bg-surface2 border border-border rounded px-3 py-3 text-base text-fg font-body focus:outline-none focus:border-accent resize-none"
                     />
                   </div>
                 </>

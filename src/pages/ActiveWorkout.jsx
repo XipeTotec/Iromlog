@@ -351,14 +351,14 @@ export default function ActiveWorkout() {
                 </span>
                 <button
                   onClick={() => toggleGif(exIdx, ex.exercise || { id: ex.exerciseId, name: ex.exerciseId })}
-                  className="shrink-0 text-muted hover:text-accent transition-colors"
+                  className="shrink-0 p-2 -mr-1 text-muted hover:text-accent transition-colors"
                   title="Show demo"
                 >
                   <PlayCircle size={18} />
                 </button>
                 <button
                   onClick={() => handleDeleteExercise(exIdx)}
-                  className="shrink-0 text-muted hover:text-accent2 transition-colors"
+                  className="shrink-0 p-2 -mr-2 text-muted hover:text-accent2 transition-colors"
                   title="Remove exercise"
                 >
                   <Trash2 size={16} />
@@ -397,20 +397,20 @@ export default function ActiveWorkout() {
               )}
 
               {/* Sets */}
-              <div className="px-3 py-2 space-y-1">
+              <div className="px-3 py-2 space-y-2">
                 {/* Column headers */}
-                <div className="flex items-center gap-1.5 mb-1">
+                <div className="flex items-center gap-2 mb-1">
                   <div className="w-7 text-xs text-muted font-mono text-center">#</div>
                   <div className="flex-1 text-xs text-muted font-body text-center">KG</div>
                   <div className="flex-1 text-xs text-muted font-body text-center">REPS</div>
-                  <div className="w-10" />
+                  <div className="w-11" />
                 </div>
 
                 {warmupSets.map((set) => {
                   const actualIdx = ex.sets.indexOf(set);
                   const prevWarmup = ex.prevSets?.filter(s => s.isWarmup)[warmupSets.indexOf(set)];
                   return (
-                    <div key={set.id} className="flex items-center gap-1.5">
+                    <div key={set.id} className="flex items-center gap-2">
                       <div className="w-7 flex items-center justify-center">
                         <span className="text-xs font-mono text-muted bg-surface2 rounded px-1">W</span>
                       </div>
@@ -419,22 +419,22 @@ export default function ActiveWorkout() {
                         value={set.weight}
                         onChange={e => handleSetChange(exIdx, actualIdx, 'weight', e.target.value)}
                         placeholder={prevWarmup ? String(prevWarmup.weight) : '—'}
-                        className="flex-1 bg-surface2 border border-border rounded px-1 py-2 text-center font-mono text-sm text-muted focus:outline-none focus:border-accent placeholder-muted/40"
+                        className="flex-1 bg-surface2 border border-border rounded px-2 py-3 text-center font-mono text-base text-muted focus:outline-none focus:border-accent placeholder-muted/40"
                       />
                       <input
                         type="number"
                         value={set.reps}
                         onChange={e => handleSetChange(exIdx, actualIdx, 'reps', e.target.value)}
                         placeholder={prevWarmup ? String(prevWarmup.reps) : '—'}
-                        className="flex-1 bg-surface2 border border-border rounded px-1 py-2 text-center font-mono text-sm text-muted focus:outline-none focus:border-accent placeholder-muted/40"
+                        className="flex-1 bg-surface2 border border-border rounded px-2 py-3 text-center font-mono text-base text-muted focus:outline-none focus:border-accent placeholder-muted/40"
                       />
                       <button
                         onClick={() => handleSetDone(exIdx, actualIdx)}
-                        className={`w-10 h-9 rounded flex items-center justify-center border transition-colors ${
+                        className={`w-11 h-11 rounded flex items-center justify-center border transition-colors ${
                           set.done ? 'bg-surface2 border-border text-muted' : 'border-border text-muted hover:border-accent hover:text-accent'
                         }`}
                       >
-                        <Check size={15} />
+                        <Check size={16} />
                       </button>
                     </div>
                   );
@@ -444,7 +444,7 @@ export default function ActiveWorkout() {
                   const actualIdx = ex.sets.indexOf(set);
                   const prev = ex.prevSets?.filter(s => !s.isWarmup)[wIdx];
                   return (
-                    <div key={set.id} className="flex items-center gap-1.5">
+                    <div key={set.id} className="flex items-center gap-2">
                       <div className="w-7 flex items-center justify-center">
                         <span className={`text-xs font-mono ${set.done ? 'text-accent' : 'text-muted'}`}>
                           {set.setNumber}
@@ -455,7 +455,7 @@ export default function ActiveWorkout() {
                         value={set.weight}
                         onChange={e => handleSetChange(exIdx, actualIdx, 'weight', e.target.value)}
                         placeholder={prev ? String(prev.weight) : '0'}
-                        className={`flex-1 border rounded px-1 py-2 text-center font-mono text-sm focus:outline-none focus:border-accent ${
+                        className={`flex-1 border rounded px-2 py-3 text-center font-mono text-base focus:outline-none focus:border-accent ${
                           set.done ? 'bg-accent/10 border-accent/30 text-accent' : 'bg-surface2 border-border text-fg'
                         }`}
                       />
@@ -464,18 +464,18 @@ export default function ActiveWorkout() {
                         value={set.reps}
                         onChange={e => handleSetChange(exIdx, actualIdx, 'reps', e.target.value)}
                         placeholder={prev ? String(prev.reps) : '0'}
-                        className={`flex-1 border rounded px-1 py-2 text-center font-mono text-sm focus:outline-none focus:border-accent ${
+                        className={`flex-1 border rounded px-2 py-3 text-center font-mono text-base focus:outline-none focus:border-accent ${
                           set.done ? 'bg-accent/10 border-accent/30 text-accent' : 'bg-surface2 border-border text-fg'
                         }`}
                       />
-                      <div className="relative w-10">
+                      <div className="relative w-11">
                         <button
                           onClick={() => handleSetDone(exIdx, actualIdx)}
-                          className={`w-10 h-9 rounded flex items-center justify-center border transition-colors ${
+                          className={`w-11 h-11 rounded flex items-center justify-center border transition-colors ${
                             set.done ? 'bg-accent border-accent text-bg' : 'border-border text-muted hover:border-accent hover:text-accent'
                           }`}
                         >
-                          <Check size={15} />
+                          <Check size={16} />
                         </button>
                         {set.isPR && (
                           <div className="absolute -top-1 -right-1 w-4 h-4 bg-yellow-400 rounded-full flex items-center justify-center">
@@ -492,13 +492,13 @@ export default function ActiveWorkout() {
               <div className="px-3 pb-3 flex gap-2">
                 <button
                   onClick={() => handleAddSet(exIdx)}
-                  className="flex-1 flex items-center justify-center gap-1 py-2 text-xs font-body text-muted border border-border rounded hover:border-accent hover:text-accent transition-colors"
+                  className="flex-1 flex items-center justify-center gap-1 py-3 text-xs font-body text-muted border border-border rounded hover:border-accent hover:text-accent transition-colors"
                 >
                   <Plus size={12} /> COPY LAST SET
                 </button>
                 <button
                   onClick={() => handleAddWarmup(exIdx)}
-                  className="flex-1 flex items-center justify-center gap-1 py-2 text-xs font-body text-muted border border-border rounded hover:border-muted transition-colors"
+                  className="flex-1 flex items-center justify-center gap-1 py-3 text-xs font-body text-muted border border-border rounded hover:border-muted transition-colors"
                 >
                   <Plus size={12} /> WARMUP
                 </button>
@@ -550,7 +550,7 @@ export default function ActiveWorkout() {
                   value={exSearch}
                   onChange={e => setExSearch(e.target.value)}
                   placeholder="Search exercises…"
-                  className="w-full bg-surface2 border border-border rounded pl-8 pr-3 py-2 text-fg font-body text-sm placeholder-muted focus:outline-none focus:border-accent"
+                  className="w-full bg-surface2 border border-border rounded pl-8 pr-3 py-3 text-base text-fg font-body placeholder-muted focus:outline-none focus:border-accent"
                 />
               </div>
             </div>
@@ -563,7 +563,7 @@ export default function ActiveWorkout() {
                     <button
                       key={ex.id}
                       onClick={() => !alreadyAdded && handleAddExercise(ex)}
-                      className={`w-full text-left px-3 py-2.5 rounded font-body text-sm border transition-colors ${
+                      className={`w-full text-left px-3 py-3.5 rounded font-body text-base border transition-colors ${
                         alreadyAdded
                           ? 'border-transparent text-muted opacity-40 cursor-default'
                           : 'bg-surface2 border-transparent text-fg hover:border-accent hover:text-accent'
