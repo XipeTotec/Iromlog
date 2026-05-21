@@ -32,16 +32,29 @@ function getPoSuggestion(prevSets) {
 }
 
 function buildInitialSets(defaultSets, defaultReps, prevSets) {
-  const prevWorkingSet = prevSets ? prevSets.filter(s => !s.isWarmup)[0] : null;
-  return [{
-    id: `set-0-${Date.now()}`,
-    setNumber: 1,
-    weight: prevWorkingSet ? String(prevWorkingSet.weight) : '',
-    reps: prevWorkingSet ? String(prevWorkingSet.reps) : String(defaultReps),
+  const prevWorking = (prevSets || []).filter(s => !s.isWarmup && s.done);
+
+  if (prevWorking.length > 0) {
+    return prevWorking.map((s, i) => ({
+      id: `set-${i}-${Date.now() + i}`,
+      setNumber: i + 1,
+      weight: s.weight > 0 ? String(s.weight) : '',
+      reps: s.reps > 0 ? String(s.reps) : '',
+      done: false,
+      isWarmup: false,
+      isPR: false,
+    }));
+  }
+
+  return Array.from({ length: defaultSets || 1 }, (_, i) => ({
+    id: `set-${i}-${Date.now() + i}`,
+    setNumber: i + 1,
+    weight: '',
+    reps: String(defaultReps || 10),
     done: false,
     isWarmup: false,
     isPR: false,
-  }];
+  }));
 }
 
 export default function ActiveWorkout() {
