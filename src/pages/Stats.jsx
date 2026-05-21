@@ -76,18 +76,19 @@ export default function Stats() {
     data['il_github_pat'] = pat;
     data['il_shortcode'] = code;
 
-    const content = btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2))));
+    const json = JSON.stringify(data, null, 2);
+    const content = btoa(Array.from(new TextEncoder().encode(json), b => String.fromCharCode(b)).join(''));
     const PATH = `backup/${code}.json`;
 
     let sha;
     try {
-      const r = await fetch(`https://api.github.com/repos/${REPO}/contents/${PATH}?ref=main`, {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/contents/${PATH}`, {
         headers: { Authorization: `Bearer ${pat}`, Accept: 'application/vnd.github.v3+json' }
       });
       if (r.ok) { const j = await r.json(); sha = j.sha; }
     } catch {}
 
-    const body = { message: `Backup ${new Date().toISOString()}`, content, branch: 'main' };
+    const body = { message: `Backup ${new Date().toISOString()}`, content };
     if (sha) body.sha = sha;
 
     const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${PATH}`, {
