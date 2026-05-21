@@ -11,6 +11,7 @@ import {
 } from '../data/storage.js';
 import { CARDIO_TYPES } from '../data/cardioTypes.js';
 import { formatTime } from '../hooks/useTimer.js';
+import { searchExercises } from '../utils/exerciseSearch.js';
 
 const TYPE_COLORS = {
   push: '#ff6b35',
@@ -127,9 +128,7 @@ export default function Home() {
     setExSearch('');
   }
 
-  const filteredExercises = exercises.filter(e =>
-    e.name.toLowerCase().includes(exSearch.toLowerCase())
-  );
+  const filteredExercises = searchExercises(exercises, exSearch);
 
   const exMap = {};
   exercises.forEach(e => { exMap[e.id] = e; });

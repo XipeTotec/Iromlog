@@ -13,6 +13,7 @@ import {
   getExercises,
 } from '../data/storage.js';
 import { MUSCLE_COLORS } from '../data/exercises.js';
+import { searchExercises } from '../utils/exerciseSearch.js';
 import RestTimer from '../components/RestTimer.jsx';
 import Toast from '../components/Toast.jsx';
 
@@ -710,13 +711,8 @@ export default function ActiveWorkout() {
               ))}
             </div>
             <div className="overflow-y-auto px-4 pb-6 space-y-1">
-              {allExercises
-                .filter(e => {
-                  const q = exSearch.toLowerCase();
-                  const matchesSearch = !q || e.name.toLowerCase().includes(q) || e.muscleGroup.includes(q);
-                  const matchesGroup = !exGroupFilter || e.muscleGroup === exGroupFilter;
-                  return matchesSearch && matchesGroup;
-                })
+              {searchExercises(allExercises, exSearch)
+                .filter(e => !exGroupFilter || e.muscleGroup === exGroupFilter)
                 .map(ex => {
                   const alreadyAdded = exercises.some(e => e.exerciseId === ex.id);
                   const color = MUSCLE_COLORS[ex.muscleGroup] || '#666';

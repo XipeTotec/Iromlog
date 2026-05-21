@@ -1,11 +1,12 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import {
   LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid,
   Tooltip, ResponsiveContainer, Cell
 } from 'recharts';
-import { Search } from 'lucide-react';
+import { Search, X } from 'lucide-react';
 import { getSessions, getExercises } from '../data/storage.js';
 import { MUSCLE_COLORS } from '../data/exercises.js';
+import { searchExercises } from '../utils/exerciseSearch.js';
 
 const RANGES = [
   { label: '1M', days: 30 },
@@ -31,7 +32,8 @@ export default function Progress() {
   const [selectedExId, setSelectedExId] = useState('');
   const [range, setRange] = useState('3M');
   const [exSearch, setExSearch] = useState('');
-  const [showDropdown, setShowDropdown] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
+  const inputRef = useRef(null);
 
   useEffect(() => {
     setSessions(getSessions());
@@ -46,8 +48,9 @@ export default function Progress() {
     return m;
   }, [exercises]);
 
-  const filteredExercises = exercises.filter(e =>
-    e.name.toLowerCase().includes(exSearch.toLowerCase())
+  const filteredExercises = useMemo(
+    () => searchExercises(exercises, exSearch),
+    [exercises, exSearch]
   );
 
   const selectedExercise = exMap[selectedExId];
@@ -156,41 +159,45 @@ export default function Progress() {
 
       {/* Exercise selector */}
       <div className="mb-6 relative">
-        <label className="text-xs font-body text-muted uppercase tracking-wider mb-2 block">
-          Exercise
-        </label>
+        <label className="text-xs font-body text-muted uppercase tracking-wider mb-2 block">Exercise</label>
         <div className="relative">
           <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted z-10" />
           <input
+            ref={inputRef}
             type="text"
-            value={exSearch || selectedExercise?.name || ''}
-            onChange={e => {
-              setExSearch(e.target.value);
-              setShowDropdown(true);
-            }}
-            onFocus={() => setShowDropdown(true)}
-            placeholder="Search exercise..."
-            className="w-full bg-surface2 border border-border rounded pl-8 pr-3 py-2 text-fg font-body text-sm placeholder-muted focus:outline-none focus:border-accent"
+            value={isSearching ? exSearch : (selectedExercise?.name || '')}
+            onChange={e => setExSearch(e.target.value)}
+            onFocus={() => { setIsSearching(true); setExSearch(''); }}
+            onBlur={() => setTimeout(() => { setIsSearching(false); setExSearch(''); }, 150)}
+            placeholder="Search exercise…"
+            className="w-full bg-surface2 border border-border rounded pl-8 pr-8 py-3 text-base text-fg font-body placeholder-muted focus:outline-none focus:border-accent"
           />
+          {isSearching && exSearch && (
+            <button
+              onMouseDown={e => { e.preventDefault(); setExSearch(''); inputRef.current?.focus(); }}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-fg"
+            >
+              <X size={14} />
+            </button>
+          )}
         </div>
-        {showDropdown && filteredExercises.length > 0 && (
-          <div className="absolute z-20 w-full bg-surface border border-border rounded mt-1 max-h-48 overflow-y-auto shadow-lg">
-            {filteredExercises.map(ex => (
+        {isSearching && (
+          <div className="absolute z-20 w-full bg-surface border border-border rounded mt-1 max-h-56 overflow-y-auto shadow-lg">
+            {(exSearch ? filteredExercises : exercises).map(ex => (
               <button
                 key={ex.id}
-                onClick={() => {
-                  setSelectedExId(ex.id);
-                  setExSearch('');
-                  setShowDropdown(false);
-                }}
-                className={`w-full text-left px-3 py-2 text-sm font-body hover:bg-surface2 transition-colors ${
+                onMouseDown={() => { setSelectedExId(ex.id); setIsSearching(false); setExSearch(''); }}
+                className={`w-full text-left px-3 py-2.5 text-sm font-body hover:bg-surface2 transition-colors ${
                   ex.id === selectedExId ? 'text-accent' : 'text-fg'
                 }`}
               >
                 {ex.name}
-                <span className="text-muted text-xs ml-2">{ex.muscleGroup}</span>
+                <span className="ml-2 text-xs font-heading tracking-wider" style={{ color: MUSCLE_COLORS[ex.muscleGroup] || '#666' }}>{ex.muscleGroup}</span>
               </button>
             ))}
+            {exSearch && filteredExercises.length === 0 && (
+              <div className="px-3 py-3 text-sm text-muted font-body">No matches</div>
+            )}
           </div>
         )}
       </div>
