@@ -81,13 +81,13 @@ export default function Stats() {
 
     let sha;
     try {
-      const r = await fetch(`https://api.github.com/repos/${REPO}/contents/${PATH}`, {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/contents/${PATH}?ref=main`, {
         headers: { Authorization: `Bearer ${pat}`, Accept: 'application/vnd.github.v3+json' }
       });
       if (r.ok) { const j = await r.json(); sha = j.sha; }
     } catch {}
 
-    const body = { message: `Backup ${new Date().toISOString()}`, content };
+    const body = { message: `Backup ${new Date().toISOString()}`, content, branch: 'main' };
     if (sha) body.sha = sha;
 
     const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${PATH}`, {
