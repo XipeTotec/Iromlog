@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { X, Check, Plus, PlayCircle, TrendingUp, Search, Trash2 } from 'lucide-react';
 import { fetchExerciseImage } from '../data/exerciseImages.js';
@@ -83,6 +83,32 @@ export default function ActiveWorkout() {
     const settings = getSettings();
     return settings.restDuration || 90;
   });
+
+  const holdRef = useRef(null);
+
+  function startWeightHold(exIdx, actualIdx, delta) {
+    function step() {
+      setExercises(prev => prev.map((ex, i) => {
+        if (i !== exIdx) return ex;
+        return {
+          ...ex,
+          sets: ex.sets.map((s, j) => {
+            if (j !== actualIdx) return s;
+            const cur = parseFloat(s.weight) || 0;
+            return { ...s, weight: String(Math.max(0, Math.round((cur + delta) * 4) / 4)) };
+          }),
+        };
+      }));
+    }
+    step();
+    holdRef.current = setTimeout(() => { holdRef.current = setInterval(step, 120); }, 400);
+  }
+
+  function stopWeightHold() {
+    clearTimeout(holdRef.current);
+    clearInterval(holdRef.current);
+    holdRef.current = null;
+  }
 
   const stopwatch = useStopwatch();
   const restTimer = useRestTimer(useCallback(() => {
@@ -414,7 +440,7 @@ export default function ActiveWorkout() {
                 {/* Column headers */}
                 <div className="flex items-center gap-3 mb-1">
                   <div className="w-6" />
-                  <div className="w-20 text-xs text-muted font-body text-center">KG</div>
+                  <div className="w-32 text-xs text-muted font-body text-center">KG</div>
                   <div className="w-4" />
                   <div className="w-14 text-xs text-muted font-body text-center">REPS</div>
                   <div className="flex-1" />
@@ -429,13 +455,28 @@ export default function ActiveWorkout() {
                       <div className="w-6 flex items-center justify-center">
                         <span className="text-xs font-mono text-muted bg-surface2 rounded px-1">W</span>
                       </div>
-                      <input
-                        type="number"
-                        value={set.weight}
-                        onChange={e => handleSetChange(exIdx, actualIdx, 'weight', e.target.value)}
-                        placeholder={prevWarmup ? String(prevWarmup.weight) : '—'}
-                        className="w-20 bg-surface2 border border-border rounded px-2 py-3 text-center font-mono text-base text-muted focus:outline-none focus:border-accent placeholder-muted/40"
-                      />
+                      {/* KG stepper */}
+                      <div className="flex items-center gap-1 w-32 shrink-0">
+                        <button
+                          onPointerDown={() => startWeightHold(exIdx, actualIdx, -2.5)}
+                          onPointerUp={stopWeightHold}
+                          onPointerLeave={stopWeightHold}
+                          className="shrink-0 w-7 h-11 flex items-center justify-center bg-surface2 border border-border rounded text-muted text-lg select-none touch-none"
+                        >−</button>
+                        <input
+                          type="number"
+                          value={set.weight}
+                          onChange={e => handleSetChange(exIdx, actualIdx, 'weight', e.target.value)}
+                          placeholder={prevWarmup ? String(prevWarmup.weight) : '—'}
+                          className="min-w-0 flex-1 bg-surface2 border border-border rounded py-3 text-center font-mono text-base text-muted focus:outline-none focus:border-accent placeholder-muted/40"
+                        />
+                        <button
+                          onPointerDown={() => startWeightHold(exIdx, actualIdx, 2.5)}
+                          onPointerUp={stopWeightHold}
+                          onPointerLeave={stopWeightHold}
+                          className="shrink-0 w-7 h-11 flex items-center justify-center bg-surface2 border border-border rounded text-muted text-lg select-none touch-none"
+                        >+</button>
+                      </div>
                       <span className="w-4 text-center text-xs text-muted">×</span>
                       <input
                         type="number"
@@ -467,15 +508,34 @@ export default function ActiveWorkout() {
                           {set.setNumber}
                         </span>
                       </div>
-                      <input
-                        type="number"
-                        value={set.weight}
-                        onChange={e => handleSetChange(exIdx, actualIdx, 'weight', e.target.value)}
-                        placeholder={prev ? String(prev.weight) : '0'}
-                        className={`w-20 border rounded px-2 py-3 text-center font-mono text-base focus:outline-none focus:border-accent ${
-                          set.done ? 'bg-accent/10 border-accent/30 text-accent' : 'bg-surface2 border-border text-fg'
-                        }`}
-                      />
+                      {/* KG stepper */}
+                      <div className="flex items-center gap-1 w-32 shrink-0">
+                        <button
+                          onPointerDown={() => startWeightHold(exIdx, actualIdx, -2.5)}
+                          onPointerUp={stopWeightHold}
+                          onPointerLeave={stopWeightHold}
+                          className={`shrink-0 w-7 h-11 flex items-center justify-center border rounded text-lg select-none touch-none transition-colors ${
+                            set.done ? 'bg-accent/10 border-accent/30 text-accent' : 'bg-surface2 border-border text-muted'
+                          }`}
+                        >−</button>
+                        <input
+                          type="number"
+                          value={set.weight}
+                          onChange={e => handleSetChange(exIdx, actualIdx, 'weight', e.target.value)}
+                          placeholder={prev ? String(prev.weight) : '0'}
+                          className={`min-w-0 flex-1 border rounded py-3 text-center font-mono text-base focus:outline-none focus:border-accent ${
+                            set.done ? 'bg-accent/10 border-accent/30 text-accent' : 'bg-surface2 border-border text-fg'
+                          }`}
+                        />
+                        <button
+                          onPointerDown={() => startWeightHold(exIdx, actualIdx, 2.5)}
+                          onPointerUp={stopWeightHold}
+                          onPointerLeave={stopWeightHold}
+                          className={`shrink-0 w-7 h-11 flex items-center justify-center border rounded text-lg select-none touch-none transition-colors ${
+                            set.done ? 'bg-accent/10 border-accent/30 text-accent' : 'bg-surface2 border-border text-muted'
+                          }`}
+                        >+</button>
+                      </div>
                       <span className="w-4 text-center text-xs text-muted">×</span>
                       <input
                         type="number"
