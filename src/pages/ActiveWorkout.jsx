@@ -61,6 +61,7 @@ export default function ActiveWorkout() {
   const [showCancel, setShowCancel] = useState(false);
   const [showAddExercise, setShowAddExercise] = useState(false);
   const [exSearch, setExSearch] = useState('');
+  const [exGroupFilter, setExGroupFilter] = useState(null);
   const [allExercises] = useState(() => getExercises());
   const [prToast, setPrToast] = useState({ show: false, exerciseName: '', fields: [] });
   const [gifExpanded, setGifExpanded] = useState({});
@@ -577,14 +578,14 @@ export default function ActiveWorkout() {
       {/* Add exercise picker */}
       {showAddExercise && (
         <div className="fixed inset-0 z-50 bg-black/80 flex items-end">
-          <div className="w-full bg-surface border-t border-border rounded-t-2xl flex flex-col max-h-[75vh]">
+          <div className="w-full bg-surface border-t border-border rounded-t-2xl flex flex-col max-h-[80vh]">
             <div className="flex items-center justify-between px-4 pt-4 pb-3 shrink-0">
               <h3 className="font-heading text-2xl text-fg">ADD EXERCISE</h3>
-              <button onClick={() => { setShowAddExercise(false); setExSearch(''); }} className="text-muted hover:text-fg transition-colors">
+              <button onClick={() => { setShowAddExercise(false); setExSearch(''); setExGroupFilter(null); }} className="text-muted hover:text-fg transition-colors">
                 <X size={22} />
               </button>
             </div>
-            <div className="px-4 pb-3 shrink-0">
+            <div className="px-4 pb-2 shrink-0">
               <div className="relative">
                 <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
                 <input
@@ -592,16 +593,36 @@ export default function ActiveWorkout() {
                   type="text"
                   value={exSearch}
                   onChange={e => setExSearch(e.target.value)}
-                  placeholder="Search exercises…"
+                  placeholder="Search exercises or muscle group…"
                   className="w-full bg-surface2 border border-border rounded pl-8 pr-3 py-3 text-base text-fg font-body placeholder-muted focus:outline-none focus:border-accent"
                 />
               </div>
             </div>
+            <div className="flex gap-2 px-4 pb-3 overflow-x-auto no-scrollbar shrink-0">
+              {Object.entries(MUSCLE_COLORS).map(([group, color]) => (
+                <button
+                  key={group}
+                  onClick={() => setExGroupFilter(prev => prev === group ? null : group)}
+                  className="shrink-0 px-3 py-1 rounded-full font-heading text-xs tracking-wider transition-colors"
+                  style={exGroupFilter === group
+                    ? { backgroundColor: color, color: '#0a0a0a' }
+                    : { backgroundColor: '#1f1f1f', color: '#666', border: '1px solid #2a2a2a' }}
+                >
+                  {group}
+                </button>
+              ))}
+            </div>
             <div className="overflow-y-auto px-4 pb-6 space-y-1">
               {allExercises
-                .filter(e => e.name.toLowerCase().includes(exSearch.toLowerCase()))
+                .filter(e => {
+                  const q = exSearch.toLowerCase();
+                  const matchesSearch = !q || e.name.toLowerCase().includes(q) || e.muscleGroup.includes(q);
+                  const matchesGroup = !exGroupFilter || e.muscleGroup === exGroupFilter;
+                  return matchesSearch && matchesGroup;
+                })
                 .map(ex => {
                   const alreadyAdded = exercises.some(e => e.exerciseId === ex.id);
+                  const color = MUSCLE_COLORS[ex.muscleGroup] || '#666';
                   return (
                     <button
                       key={ex.id}
@@ -613,7 +634,7 @@ export default function ActiveWorkout() {
                       }`}
                     >
                       {ex.name}
-                      <span className="ml-2 text-xs opacity-50">{ex.muscleGroup}</span>
+                      <span className="ml-2 text-xs font-heading tracking-wider" style={{ color }}>{ex.muscleGroup}</span>
                     </button>
                   );
                 })}
