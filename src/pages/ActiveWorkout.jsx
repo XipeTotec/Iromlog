@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { X, Check, Plus, PlayCircle, TrendingUp, Search, Trash2, RotateCcw, GripVertical, ChevronUp, ChevronDown, ChevronLeft } from 'lucide-react';
+import { X, Check, Plus, PlayCircle, TrendingUp, Search, Trash2, RotateCcw, GripVertical, ChevronUp, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
 import { fetchExerciseImage } from '../data/exerciseImages.js';
 import ExerciseDemo from '../components/ExerciseDemo.jsx';
 import { useStopwatch, useRestTimer, formatTime } from '../hooks/useTimer.js';
@@ -61,6 +61,7 @@ export default function ActiveWorkout() {
   });
 
   const [showCancel, setShowCancel] = useState(false);
+  const [collapsedEx, setCollapsedEx] = useState({});
   const [reorderIdx, setReorderIdx] = useState(null);
   const [showAddExercise, setShowAddExercise] = useState(false);
   const [exSearch, setExSearch] = useState('');
@@ -424,6 +425,7 @@ export default function ActiveWorkout() {
           const warmupSets = ex.sets.filter(s => s.isWarmup);
 
           const po = getPoSuggestion(ex.prevSets);
+          const isCollapsed = !!collapsedEx[exIdx];
 
           // Superset grouping
           const prevEx = exercises[exIdx - 1];
@@ -444,7 +446,7 @@ export default function ActiveWorkout() {
               style={{ borderLeft: `3px solid ${borderColor}` }}
             >
               {/* Exercise header */}
-              <div className="px-3 py-2.5 flex items-center gap-2 border-b border-border">
+              <div className={`px-3 py-2.5 flex items-center gap-2 ${!isCollapsed ? 'border-b border-border' : ''}`}>
                 {reorderIdx === exIdx ? (
                   <div className="flex items-center gap-0.5 shrink-0">
                     <button
@@ -475,9 +477,16 @@ export default function ActiveWorkout() {
                     className="shrink-0 p-1 -ml-1 text-muted/40 hover:text-muted transition-colors"
                   ><GripVertical size={16} /></button>
                 )}
-                <span className="font-heading text-lg text-fg flex-1 leading-tight">
-                  {ex.exercise?.name || ex.exerciseId}
-                </span>
+                <button
+                  onClick={() => setCollapsedEx(prev => ({ ...prev, [exIdx]: !prev[exIdx] }))}
+                  className="font-heading text-lg text-fg flex-1 leading-tight text-left flex items-center gap-1 min-w-0"
+                >
+                  <span className="truncate">{ex.exercise?.name || ex.exerciseId}</span>
+                  {isCollapsed
+                    ? <ChevronRight size={14} className="shrink-0 text-muted" />
+                    : <ChevronDown size={14} className="shrink-0 text-muted" />
+                  }
+                </button>
                 <button
                   onClick={() => toggleGif(exIdx, ex.exercise || { id: ex.exerciseId, name: ex.exerciseId })}
                   className="shrink-0 p-2 -mr-1 text-muted hover:text-accent transition-colors"
@@ -494,8 +503,8 @@ export default function ActiveWorkout() {
                 </button>
               </div>
 
-              {/* Demo image */}
-              {gifExpanded[exIdx] && (
+              {/* Collapsible body */}
+              {!isCollapsed && gifExpanded[exIdx] && (
                 <div className="border-b border-border bg-surface2 flex items-center justify-center min-h-[120px] p-2">
                   {gifUrls[exIdx] === 'loading' || !gifUrls[exIdx] ? (
                     <span className="text-xs text-muted font-body">Loading…</span>
@@ -510,7 +519,7 @@ export default function ActiveWorkout() {
               )}
 
               {/* PO suggestion */}
-              {po && (
+              {!isCollapsed && po && (
                 <div className="px-3 py-2 border-b border-border flex items-center gap-2 bg-surface2">
                   <TrendingUp size={13} className="text-accent shrink-0" />
                   <span className="text-xs font-mono text-muted flex-1">
@@ -525,7 +534,8 @@ export default function ActiveWorkout() {
                 </div>
               )}
 
-              {/* Sets */}
+              {/* Sets, notes, add-set buttons — hidden when collapsed */}
+              {!isCollapsed && <>
               <div className="px-3 py-2 space-y-2">
                 {/* Column headers */}
                 <div className="flex items-center gap-2 mb-1">
@@ -644,6 +654,7 @@ export default function ActiveWorkout() {
                   <Plus size={12} /> WARMUP
                 </button>
               </div>
+              </>}
             </div>
             </React.Fragment>
           );
