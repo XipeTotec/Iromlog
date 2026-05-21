@@ -54,31 +54,35 @@ export default function Stats() {
   const [dbLoading, setDbLoading] = useState(false);
   const { theme, toggle: toggleTheme } = useTheme();
 
-  const [githubPat, setGithubPat] = useState(() => localStorage.getItem('il_github_pat') || '');
+  const [shortcode, setShortcode] = useState(() => localStorage.getItem('il_shortcode') || '');
   const [backupStatus, setBackupStatus] = useState('');
   const [backupLoading, setBackupLoading] = useState(false);
 
+  const REPO = 'xipetotec/iromlog';
+
   async function handleBackup() {
     const pat = localStorage.getItem('il_github_pat');
-    if (!pat) { alert('Enter a GitHub PAT first'); return; }
+    const code = localStorage.getItem('il_shortcode');
+    if (!pat) { setBackupStatus('✗ No PAT — restore first to load credentials'); return; }
+    if (!code) { setBackupStatus('✗ Enter a short code first'); return; }
 
     const data = {};
     ['il_exercises','il_templates','il_sessions','il_prs','il_body_stats','il_settings','il_cardio'].forEach(k => {
       const v = localStorage.getItem(k);
       if (v) data[k] = JSON.parse(v);
     });
-    if (pat) data['il_github_pat'] = pat;
+    data['il_github_pat'] = pat;
+    data['il_shortcode'] = code;
 
     const content = btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2))));
-    const REPO = 'xipetotec/iromlog';
-    const PATH = 'backup/data.json';
+    const PATH = `backup/${code}.json`;
 
     let sha;
     try {
-      const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${PATH}`, {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/contents/${PATH}`, {
         headers: { Authorization: `Bearer ${pat}`, Accept: 'application/vnd.github.v3+json' }
       });
-      if (res.ok) { const j = await res.json(); sha = j.sha; }
+      if (r.ok) { const j = await r.json(); sha = j.sha; }
     } catch {}
 
     const body = { message: `Backup ${new Date().toISOString()}`, content };
@@ -90,26 +94,22 @@ export default function Stats() {
       body: JSON.stringify(body),
     });
 
-    if (res.ok) { setBackupStatus('✓ Backed up'); }
-    else { setBackupStatus('✗ Failed'); }
+    if (res.ok) setBackupStatus('✓ Backed up');
+    else setBackupStatus('✗ Backup failed');
   }
 
   async function handleRestore() {
-    const pat = localStorage.getItem('il_github_pat');
-    if (!pat) { alert('Enter a GitHub PAT first'); return; }
+    const code = shortcode.trim().toLowerCase();
+    if (!code) { setBackupStatus('✗ Enter your short code'); return; }
     if (!confirm('This will overwrite all local data. Continue?')) return;
 
-    const REPO = 'xipetotec/iromlog';
-    const PATH = 'backup/data.json';
-
-    const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${PATH}`, {
-      headers: { Authorization: `Bearer ${pat}`, Accept: 'application/vnd.github.v3+json' }
-    });
-    if (!res.ok) { alert('No backup found'); return; }
-    const j = await res.json();
-    const data = JSON.parse(decodeURIComponent(escape(atob(j.content.replace(/\n/g,'')))));
+    // Fetch directly from public raw URL — no PAT needed
+    const url = `https://raw.githubusercontent.com/${REPO}/main/backup/${code}.json`;
+    const res = await fetch(url);
+    if (!res.ok) { setBackupStatus('✗ No backup found for that code'); return; }
+    const data = await res.json();
     Object.entries(data).forEach(([k, v]) => {
-      if (k === 'il_github_pat') localStorage.setItem(k, v);
+      if (k === 'il_github_pat' || k === 'il_shortcode') localStorage.setItem(k, v);
       else localStorage.setItem(k, JSON.stringify(v));
     });
     alert('Restored! Reloading…');
@@ -515,25 +515,26 @@ export default function Stats() {
           </div>
 
           <div className="pt-2 border-t border-border">
-            <label className="text-xs font-body text-muted uppercase tracking-wider block mb-2">Data Backup</label>
+            <label className="text-xs font-body text-muted uppercase tracking-wider block mb-1">Data Backup</label>
+            <p className="text-xs font-body text-muted/60 mb-2">Enter your short code to restore on any device — no password needed.</p>
             <input
-              type="password"
-              value={githubPat}
-              onChange={e => { setGithubPat(e.target.value); localStorage.setItem('il_github_pat', e.target.value); }}
-              placeholder="GitHub Personal Access Token"
+              type="text"
+              value={shortcode}
+              onChange={e => { const v = e.target.value.toLowerCase().replace(/[^a-z0-9]/g, ''); setShortcode(v); localStorage.setItem('il_shortcode', v); }}
+              placeholder="your-code (e.g. lachlan)"
               className="w-full bg-surface2 border border-border rounded px-3 py-2 text-sm font-mono text-fg mb-2 focus:outline-none focus:border-accent placeholder-muted/40"
             />
             <div className="flex gap-2">
               <button
                 onClick={async () => { setBackupLoading(true); setBackupStatus(''); await handleBackup(); setBackupLoading(false); }}
-                disabled={backupLoading || !githubPat}
+                disabled={backupLoading || !shortcode}
                 className="flex-1 border border-border rounded py-2 font-heading text-sm tracking-wider text-muted hover:text-fg hover:border-white transition-colors disabled:opacity-40"
               >
                 {backupLoading ? 'SAVING…' : 'BACKUP NOW'}
               </button>
               <button
-                onClick={handleRestore}
-                disabled={backupLoading || !githubPat}
+                onClick={async () => { setBackupLoading(true); setBackupStatus(''); await handleRestore(); setBackupLoading(false); }}
+                disabled={backupLoading || !shortcode}
                 className="flex-1 border border-border rounded py-2 font-heading text-sm tracking-wider text-muted hover:text-fg hover:border-white transition-colors disabled:opacity-40"
               >
                 RESTORE
