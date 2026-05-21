@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { X, Check, Plus, PlayCircle, TrendingUp, Search, Trash2, RotateCcw, GripVertical, ChevronUp, ChevronDown } from 'lucide-react';
+import { X, Check, Plus, PlayCircle, TrendingUp, Search, Trash2, RotateCcw, GripVertical, ChevronUp, ChevronDown, ChevronLeft } from 'lucide-react';
 import { fetchExerciseImage } from '../data/exerciseImages.js';
 import ExerciseDemo from '../components/ExerciseDemo.jsx';
 import { useStopwatch, useRestTimer, formatTime } from '../hooks/useTimer.js';
@@ -415,7 +415,7 @@ export default function ActiveWorkout() {
                     <button
                       onClick={() => setReorderIdx(null)}
                       className="w-7 h-7 flex items-center justify-center rounded text-muted hover:text-fg transition-colors"
-                    ><X size={12} /></button>
+                    ><ChevronLeft size={15} /></button>
                   </div>
                 ) : (
                   <button
