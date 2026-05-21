@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { X, Check, Plus, PlayCircle, TrendingUp, Search, Trash2, RotateCcw } from 'lucide-react';
+import { X, Check, Plus, PlayCircle, TrendingUp, Search, Trash2, RotateCcw, GripVertical, ChevronUp, ChevronDown } from 'lucide-react';
 import { fetchExerciseImage } from '../data/exerciseImages.js';
 import ExerciseDemo from '../components/ExerciseDemo.jsx';
 import { useStopwatch, useRestTimer, formatTime } from '../hooks/useTimer.js';
@@ -59,6 +59,7 @@ export default function ActiveWorkout() {
   });
 
   const [showCancel, setShowCancel] = useState(false);
+  const [reorderIdx, setReorderIdx] = useState(null);
   const [showAddExercise, setShowAddExercise] = useState(false);
   const [exSearch, setExSearch] = useState('');
   const [exGroupFilter, setExGroupFilter] = useState(null);
@@ -291,6 +292,18 @@ export default function ActiveWorkout() {
 
   function handleDeleteExercise(exIdx) {
     setExercises(prev => prev.filter((_, i) => i !== exIdx));
+    setReorderIdx(null);
+  }
+
+  function moveExercise(exIdx, dir) {
+    const target = exIdx + dir;
+    setExercises(prev => {
+      if (target < 0 || target >= prev.length) return prev;
+      const next = [...prev];
+      [next[exIdx], next[target]] = [next[target], next[exIdx]];
+      return next;
+    });
+    setReorderIdx(prev => (target < 0 || target >= exercises.length) ? prev : target);
   }
 
   function handleDeleteSet(exIdx, setIdx) {
@@ -387,6 +400,29 @@ export default function ActiveWorkout() {
             >
               {/* Exercise header */}
               <div className="px-3 py-2.5 flex items-center gap-2 border-b border-border">
+                {reorderIdx === exIdx ? (
+                  <div className="flex items-center gap-0.5 shrink-0">
+                    <button
+                      onClick={() => moveExercise(exIdx, -1)}
+                      disabled={exIdx === 0}
+                      className="w-7 h-7 flex items-center justify-center rounded text-muted hover:text-accent disabled:opacity-20 transition-colors"
+                    ><ChevronUp size={16} /></button>
+                    <button
+                      onClick={() => moveExercise(exIdx, 1)}
+                      disabled={exIdx === exercises.length - 1}
+                      className="w-7 h-7 flex items-center justify-center rounded text-muted hover:text-accent disabled:opacity-20 transition-colors"
+                    ><ChevronDown size={16} /></button>
+                    <button
+                      onClick={() => setReorderIdx(null)}
+                      className="w-7 h-7 flex items-center justify-center rounded text-muted hover:text-fg transition-colors"
+                    ><X size={12} /></button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => setReorderIdx(exIdx)}
+                    className="shrink-0 p-1 -ml-1 text-muted/40 hover:text-muted transition-colors"
+                  ><GripVertical size={16} /></button>
+                )}
                 <span className="font-heading text-lg text-fg flex-1 leading-tight">
                   {ex.exercise?.name || ex.exerciseId}
                 </span>
