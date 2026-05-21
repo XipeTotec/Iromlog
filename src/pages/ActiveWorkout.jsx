@@ -446,9 +446,10 @@ export default function ActiveWorkout() {
                   const prevWarmup = ex.prevSets?.filter(s => s.isWarmup)[warmupSets.indexOf(set)];
                   return (
                     <div key={set.id} className="flex items-center gap-2">
-                      <div className="w-6 flex items-center justify-center">
-                        <span className="text-xs font-mono text-muted bg-surface2 rounded px-1">W</span>
-                      </div>
+                      <button onClick={() => handleDeleteSet(exIdx, actualIdx)}
+                        className="shrink-0 w-6 h-11 flex items-center justify-center text-muted hover:text-red-400 transition-colors">
+                        <X size={13} />
+                      </button>
                       <div className="flex items-center gap-0.5 w-28 shrink-0">
                         <button onPointerDown={() => startFieldHold(exIdx, actualIdx, 'weight', -2.5)} onPointerUp={stopHold} onPointerLeave={stopHold}
                           className="shrink-0 w-7 h-11 flex items-center justify-center bg-surface2 border border-border rounded text-muted text-lg select-none touch-none">−</button>
@@ -467,7 +468,6 @@ export default function ActiveWorkout() {
                         <button onPointerDown={() => startFieldHold(exIdx, actualIdx, 'reps', 1)} onPointerUp={stopHold} onPointerLeave={stopHold}
                           className="shrink-0 w-6 h-11 flex items-center justify-center bg-surface2 border border-border rounded text-muted text-lg select-none touch-none">+</button>
                       </div>
-                      <div className="flex-1" />
                       <button onClick={() => handleSetDone(exIdx, actualIdx)}
                         className={`w-11 h-11 rounded flex items-center justify-center border transition-colors ${
                           set.done ? 'bg-surface2 border-border text-muted' : 'border-border text-muted hover:border-accent hover:text-accent'
