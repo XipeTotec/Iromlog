@@ -97,7 +97,10 @@ export default function Stats() {
     });
 
     if (res.ok) setBackupStatus('✓ Backed up');
-    else setBackupStatus('✗ Backup failed');
+    else {
+      const err = await res.json().catch(() => ({}));
+      setBackupStatus(`✗ ${res.status}: ${err.message || 'Backup failed'}`);
+    }
   }
 
   async function handleRestore() {
