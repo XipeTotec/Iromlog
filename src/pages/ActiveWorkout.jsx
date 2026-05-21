@@ -32,29 +32,16 @@ function getPoSuggestion(prevSets) {
 }
 
 function buildInitialSets(defaultSets, defaultReps, prevSets) {
-  const prevWorking = (prevSets || []).filter(s => !s.isWarmup && s.done);
-
-  if (prevWorking.length > 0) {
-    return prevWorking.map((s, i) => ({
-      id: `set-${i}-${Date.now() + i}`,
-      setNumber: i + 1,
-      weight: s.weight > 0 ? String(s.weight) : '',
-      reps: s.reps > 0 ? String(s.reps) : '',
-      done: false,
-      isWarmup: false,
-      isPR: false,
-    }));
-  }
-
-  return Array.from({ length: defaultSets || 1 }, (_, i) => ({
-    id: `set-${i}-${Date.now() + i}`,
-    setNumber: i + 1,
-    weight: '',
-    reps: String(defaultReps || 10),
+  const first = (prevSets || []).find(s => !s.isWarmup && s.done);
+  return [{
+    id: `set-0-${Date.now()}`,
+    setNumber: 1,
+    weight: first && first.weight > 0 ? String(first.weight) : '',
+    reps: first && first.reps > 0 ? String(first.reps) : String(defaultReps || 10),
     done: false,
     isWarmup: false,
     isPR: false,
-  }));
+  }];
 }
 
 export default function ActiveWorkout() {
@@ -86,7 +73,7 @@ export default function ActiveWorkout() {
 
   const holdRef = useRef(null);
 
-  function startWeightHold(exIdx, actualIdx, delta) {
+  function startFieldHold(exIdx, actualIdx, field, delta) {
     function step() {
       setExercises(prev => prev.map((ex, i) => {
         if (i !== exIdx) return ex;
@@ -94,8 +81,11 @@ export default function ActiveWorkout() {
           ...ex,
           sets: ex.sets.map((s, j) => {
             if (j !== actualIdx) return s;
-            const cur = parseFloat(s.weight) || 0;
-            return { ...s, weight: String(Math.max(0, Math.round((cur + delta) * 4) / 4)) };
+            const cur = parseFloat(s[field]) || 0;
+            const next = field === 'weight'
+              ? Math.round((cur + delta) * 4) / 4
+              : Math.round(cur + delta);
+            return { ...s, [field]: String(Math.max(0, next)) };
           }),
         };
       }));
@@ -104,7 +94,7 @@ export default function ActiveWorkout() {
     holdRef.current = setTimeout(() => { holdRef.current = setInterval(step, 120); }, 400);
   }
 
-  function stopWeightHold() {
+  function stopHold() {
     clearTimeout(holdRef.current);
     clearInterval(holdRef.current);
     holdRef.current = null;
@@ -438,11 +428,10 @@ export default function ActiveWorkout() {
               {/* Sets */}
               <div className="px-3 py-2 space-y-2">
                 {/* Column headers */}
-                <div className="flex items-center gap-3 mb-1">
+                <div className="flex items-center gap-2 mb-1">
                   <div className="w-6" />
-                  <div className="w-32 text-xs text-muted font-body text-center">KG</div>
-                  <div className="w-4" />
-                  <div className="w-14 text-xs text-muted font-body text-center">REPS</div>
+                  <div className="w-28 text-xs text-muted font-body text-center">KG</div>
+                  <div className="w-24 text-xs text-muted font-body text-center">REPS</div>
                   <div className="flex-1" />
                   <div className="w-11" />
                 </div>
@@ -451,47 +440,33 @@ export default function ActiveWorkout() {
                   const actualIdx = ex.sets.indexOf(set);
                   const prevWarmup = ex.prevSets?.filter(s => s.isWarmup)[warmupSets.indexOf(set)];
                   return (
-                    <div key={set.id} className="flex items-center gap-3">
+                    <div key={set.id} className="flex items-center gap-2">
                       <div className="w-6 flex items-center justify-center">
                         <span className="text-xs font-mono text-muted bg-surface2 rounded px-1">W</span>
                       </div>
-                      {/* KG stepper */}
-                      <div className="flex items-center gap-1 w-32 shrink-0">
-                        <button
-                          onPointerDown={() => startWeightHold(exIdx, actualIdx, -2.5)}
-                          onPointerUp={stopWeightHold}
-                          onPointerLeave={stopWeightHold}
-                          className="shrink-0 w-7 h-11 flex items-center justify-center bg-surface2 border border-border rounded text-muted text-lg select-none touch-none"
-                        >−</button>
-                        <input
-                          type="number"
-                          value={set.weight}
-                          onChange={e => handleSetChange(exIdx, actualIdx, 'weight', e.target.value)}
+                      <div className="flex items-center gap-0.5 w-28 shrink-0">
+                        <button onPointerDown={() => startFieldHold(exIdx, actualIdx, 'weight', -2.5)} onPointerUp={stopHold} onPointerLeave={stopHold}
+                          className="shrink-0 w-7 h-11 flex items-center justify-center bg-surface2 border border-border rounded text-muted text-lg select-none touch-none">−</button>
+                        <input type="number" value={set.weight} onChange={e => handleSetChange(exIdx, actualIdx, 'weight', e.target.value)}
                           placeholder={prevWarmup ? String(prevWarmup.weight) : '—'}
-                          className="min-w-0 flex-1 bg-surface2 border border-border rounded py-3 text-center font-mono text-base text-muted focus:outline-none focus:border-accent placeholder-muted/40"
-                        />
-                        <button
-                          onPointerDown={() => startWeightHold(exIdx, actualIdx, 2.5)}
-                          onPointerUp={stopWeightHold}
-                          onPointerLeave={stopWeightHold}
-                          className="shrink-0 w-7 h-11 flex items-center justify-center bg-surface2 border border-border rounded text-muted text-lg select-none touch-none"
-                        >+</button>
+                          className="min-w-0 flex-1 bg-surface2 border border-border rounded py-3 text-center font-mono text-base text-muted focus:outline-none focus:border-accent placeholder-muted/40" />
+                        <button onPointerDown={() => startFieldHold(exIdx, actualIdx, 'weight', 2.5)} onPointerUp={stopHold} onPointerLeave={stopHold}
+                          className="shrink-0 w-7 h-11 flex items-center justify-center bg-surface2 border border-border rounded text-muted text-lg select-none touch-none">+</button>
                       </div>
-                      <span className="w-4 text-center text-xs text-muted">×</span>
-                      <input
-                        type="number"
-                        value={set.reps}
-                        onChange={e => handleSetChange(exIdx, actualIdx, 'reps', e.target.value)}
-                        placeholder={prevWarmup ? String(prevWarmup.reps) : '—'}
-                        className="w-14 bg-surface2 border border-border rounded px-2 py-3 text-center font-mono text-base text-muted focus:outline-none focus:border-accent placeholder-muted/40"
-                      />
+                      <div className="flex items-center gap-0.5 w-24 shrink-0">
+                        <button onPointerDown={() => startFieldHold(exIdx, actualIdx, 'reps', -1)} onPointerUp={stopHold} onPointerLeave={stopHold}
+                          className="shrink-0 w-6 h-11 flex items-center justify-center bg-surface2 border border-border rounded text-muted text-lg select-none touch-none">−</button>
+                        <input type="number" value={set.reps} onChange={e => handleSetChange(exIdx, actualIdx, 'reps', e.target.value)}
+                          placeholder={prevWarmup ? String(prevWarmup.reps) : '—'}
+                          className="min-w-0 flex-1 bg-surface2 border border-border rounded py-3 text-center font-mono text-base text-muted focus:outline-none focus:border-accent placeholder-muted/40" />
+                        <button onPointerDown={() => startFieldHold(exIdx, actualIdx, 'reps', 1)} onPointerUp={stopHold} onPointerLeave={stopHold}
+                          className="shrink-0 w-6 h-11 flex items-center justify-center bg-surface2 border border-border rounded text-muted text-lg select-none touch-none">+</button>
+                      </div>
                       <div className="flex-1" />
-                      <button
-                        onClick={() => handleSetDone(exIdx, actualIdx)}
+                      <button onClick={() => handleSetDone(exIdx, actualIdx)}
                         className={`w-11 h-11 rounded flex items-center justify-center border transition-colors ${
                           set.done ? 'bg-surface2 border-border text-muted' : 'border-border text-muted hover:border-accent hover:text-accent'
-                        }`}
-                      >
+                        }`}>
                         <Check size={16} />
                       </button>
                     </div>
@@ -501,59 +476,37 @@ export default function ActiveWorkout() {
                 {workingSets.map((set, wIdx) => {
                   const actualIdx = ex.sets.indexOf(set);
                   const prev = ex.prevSets?.filter(s => !s.isWarmup)[wIdx];
+                  const doneCls = set.done ? 'bg-accent/10 border-accent/30 text-accent' : 'bg-surface2 border-border text-muted';
+                  const doneInput = set.done ? 'bg-accent/10 border-accent/30 text-accent' : 'bg-surface2 border-border text-fg';
                   return (
-                    <div key={set.id} className="flex items-center gap-3">
+                    <div key={set.id} className="flex items-center gap-2">
                       <div className="w-6 flex items-center justify-center">
-                        <span className={`text-sm font-mono ${set.done ? 'text-accent' : 'text-muted'}`}>
-                          {set.setNumber}
-                        </span>
+                        <span className={`text-sm font-mono ${set.done ? 'text-accent' : 'text-muted'}`}>{set.setNumber}</span>
                       </div>
-                      {/* KG stepper */}
-                      <div className="flex items-center gap-1 w-32 shrink-0">
-                        <button
-                          onPointerDown={() => startWeightHold(exIdx, actualIdx, -2.5)}
-                          onPointerUp={stopWeightHold}
-                          onPointerLeave={stopWeightHold}
-                          className={`shrink-0 w-7 h-11 flex items-center justify-center border rounded text-lg select-none touch-none transition-colors ${
-                            set.done ? 'bg-accent/10 border-accent/30 text-accent' : 'bg-surface2 border-border text-muted'
-                          }`}
-                        >−</button>
-                        <input
-                          type="number"
-                          value={set.weight}
-                          onChange={e => handleSetChange(exIdx, actualIdx, 'weight', e.target.value)}
+                      <div className="flex items-center gap-0.5 w-28 shrink-0">
+                        <button onPointerDown={() => startFieldHold(exIdx, actualIdx, 'weight', -2.5)} onPointerUp={stopHold} onPointerLeave={stopHold}
+                          className={`shrink-0 w-7 h-11 flex items-center justify-center border rounded text-lg select-none touch-none transition-colors ${doneCls}`}>−</button>
+                        <input type="number" value={set.weight} onChange={e => handleSetChange(exIdx, actualIdx, 'weight', e.target.value)}
                           placeholder={prev ? String(prev.weight) : '0'}
-                          className={`min-w-0 flex-1 border rounded py-3 text-center font-mono text-base focus:outline-none focus:border-accent ${
-                            set.done ? 'bg-accent/10 border-accent/30 text-accent' : 'bg-surface2 border-border text-fg'
-                          }`}
-                        />
-                        <button
-                          onPointerDown={() => startWeightHold(exIdx, actualIdx, 2.5)}
-                          onPointerUp={stopWeightHold}
-                          onPointerLeave={stopWeightHold}
-                          className={`shrink-0 w-7 h-11 flex items-center justify-center border rounded text-lg select-none touch-none transition-colors ${
-                            set.done ? 'bg-accent/10 border-accent/30 text-accent' : 'bg-surface2 border-border text-muted'
-                          }`}
-                        >+</button>
+                          className={`min-w-0 flex-1 border rounded py-3 text-center font-mono text-base focus:outline-none focus:border-accent ${doneInput}`} />
+                        <button onPointerDown={() => startFieldHold(exIdx, actualIdx, 'weight', 2.5)} onPointerUp={stopHold} onPointerLeave={stopHold}
+                          className={`shrink-0 w-7 h-11 flex items-center justify-center border rounded text-lg select-none touch-none transition-colors ${doneCls}`}>+</button>
                       </div>
-                      <span className="w-4 text-center text-xs text-muted">×</span>
-                      <input
-                        type="number"
-                        value={set.reps}
-                        onChange={e => handleSetChange(exIdx, actualIdx, 'reps', e.target.value)}
-                        placeholder={prev ? String(prev.reps) : '0'}
-                        className={`w-14 border rounded px-2 py-3 text-center font-mono text-base focus:outline-none focus:border-accent ${
-                          set.done ? 'bg-accent/10 border-accent/30 text-accent' : 'bg-surface2 border-border text-fg'
-                        }`}
-                      />
+                      <div className="flex items-center gap-0.5 w-24 shrink-0">
+                        <button onPointerDown={() => startFieldHold(exIdx, actualIdx, 'reps', -1)} onPointerUp={stopHold} onPointerLeave={stopHold}
+                          className={`shrink-0 w-6 h-11 flex items-center justify-center border rounded text-lg select-none touch-none transition-colors ${doneCls}`}>−</button>
+                        <input type="number" value={set.reps} onChange={e => handleSetChange(exIdx, actualIdx, 'reps', e.target.value)}
+                          placeholder={prev ? String(prev.reps) : '0'}
+                          className={`min-w-0 flex-1 border rounded py-3 text-center font-mono text-base focus:outline-none focus:border-accent ${doneInput}`} />
+                        <button onPointerDown={() => startFieldHold(exIdx, actualIdx, 'reps', 1)} onPointerUp={stopHold} onPointerLeave={stopHold}
+                          className={`shrink-0 w-6 h-11 flex items-center justify-center border rounded text-lg select-none touch-none transition-colors ${doneCls}`}>+</button>
+                      </div>
                       <div className="flex-1" />
                       <div className="relative w-11">
-                        <button
-                          onClick={() => handleSetDone(exIdx, actualIdx)}
+                        <button onClick={() => handleSetDone(exIdx, actualIdx)}
                           className={`w-11 h-11 rounded flex items-center justify-center border transition-colors ${
                             set.done ? 'bg-accent border-accent text-bg' : 'border-border text-muted hover:border-accent hover:text-accent'
-                          }`}
-                        >
+                          }`}>
                           <Check size={16} />
                         </button>
                         {set.isPR && (
