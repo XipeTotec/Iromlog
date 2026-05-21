@@ -73,7 +73,6 @@ export default function Stats() {
       const v = localStorage.getItem(k);
       if (v) data[k] = JSON.parse(v);
     });
-    data['il_github_pat'] = pat;
     data['il_shortcode'] = code;
 
     const json = JSON.stringify(data, null, 2);
@@ -115,7 +114,7 @@ export default function Stats() {
     if (!res.ok) { setBackupStatus('✗ No backup found for that code'); return; }
     const data = await res.json();
     Object.entries(data).forEach(([k, v]) => {
-      if (k === 'il_github_pat' || k === 'il_shortcode') localStorage.setItem(k, v);
+      if (k === 'il_shortcode') localStorage.setItem(k, v);
       else localStorage.setItem(k, JSON.stringify(v));
     });
     alert('Restored! Reloading…');
