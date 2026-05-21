@@ -14,6 +14,13 @@ export const EXERCISES = [
   { id: 'db-fly', name: 'DB Fly', apiName: 'dumbbell fly', muscleGroup: 'chest', equipment: 'dumbbell', custom: false },
   { id: 'landmine-press', name: 'Landmine Press', apiName: 'landmine press', muscleGroup: 'chest', equipment: 'barbell', custom: false },
   { id: 'smith-bench-press', name: 'Smith Bench Press', apiName: 'smith machine bench press', muscleGroup: 'chest', equipment: 'machine', custom: false },
+  { id: 'chest-press-machine', name: 'Chest Press Machine', apiName: 'chest press machine', muscleGroup: 'chest', equipment: 'machine', custom: false },
+  { id: 'incline-chest-press-machine', name: 'Incline Chest Press Machine', apiName: 'incline chest press machine', muscleGroup: 'chest', equipment: 'machine', custom: false },
+  { id: 'assisted-dip-machine', name: 'Assisted Dip Machine', apiName: 'assisted dip machine', muscleGroup: 'chest', equipment: 'machine', custom: false },
+  { id: 'low-cable-fly', name: 'Low Cable Fly', apiName: 'low cable fly', muscleGroup: 'chest', equipment: 'cable', custom: false },
+  { id: 'high-cable-fly', name: 'High Cable Fly', apiName: 'high cable fly', muscleGroup: 'chest', equipment: 'cable', custom: false },
+  { id: 'db-pullover', name: 'DB Pullover', apiName: 'dumbbell pullover', muscleGroup: 'chest', equipment: 'dumbbell', custom: false },
+  { id: 'floor-press', name: 'Floor Press', apiName: 'floor press', muscleGroup: 'chest', equipment: 'barbell', custom: false },
 
   // Back
   { id: 'deadlift', name: 'Deadlift', apiName: 'deadlift', muscleGroup: 'back', equipment: 'barbell', custom: false },
@@ -35,6 +42,14 @@ export const EXERCISES = [
   { id: 'rack-pull', name: 'Rack Pull', apiName: 'rack pull', muscleGroup: 'back', equipment: 'barbell', custom: false },
   { id: 'shrug', name: 'Shrug', apiName: 'barbell shrug', muscleGroup: 'back', equipment: 'barbell', custom: false },
   { id: 'db-shrug', name: 'DB Shrug', apiName: 'dumbbell shrug', muscleGroup: 'back', equipment: 'dumbbell', custom: false },
+  { id: 'assisted-pull-up-machine', name: 'Assisted Pull-Up Machine', apiName: 'assisted pull-up machine', muscleGroup: 'back', equipment: 'machine', custom: false },
+  { id: 'seated-row-machine', name: 'Seated Row Machine', apiName: 'seated row machine', muscleGroup: 'back', equipment: 'machine', custom: false },
+  { id: 'back-extension-machine', name: 'Back Extension Machine', apiName: 'back extension machine', muscleGroup: 'back', equipment: 'machine', custom: false },
+  { id: 'neutral-grip-pulldown', name: 'Neutral Grip Pulldown', apiName: 'neutral grip lat pulldown', muscleGroup: 'back', equipment: 'cable', custom: false },
+  { id: 'single-arm-pulldown', name: 'Single Arm Pulldown', apiName: 'single arm lat pulldown', muscleGroup: 'back', equipment: 'cable', custom: false },
+  { id: 'trap-bar-deadlift', name: 'Trap Bar Deadlift', apiName: 'trap bar deadlift', muscleGroup: 'back', equipment: 'barbell', custom: false },
+  { id: 'seal-row', name: 'Seal Row', apiName: 'seal row', muscleGroup: 'back', equipment: 'barbell', custom: false },
+  { id: 'meadows-row', name: 'Meadows Row', apiName: 'meadows row', muscleGroup: 'back', equipment: 'barbell', custom: false },
 
   // Shoulders
   { id: 'ohp', name: 'OHP', apiName: 'barbell overhead press', muscleGroup: 'shoulders', equipment: 'barbell', custom: false },
@@ -48,6 +63,10 @@ export const EXERCISES = [
   { id: 'cable-rear-delt-fly', name: 'Cable Rear Delt Fly', apiName: 'cable rear delt fly', muscleGroup: 'shoulders', equipment: 'cable', custom: false },
   { id: 'upright-row', name: 'Upright Row', apiName: 'barbell upright row', muscleGroup: 'shoulders', equipment: 'barbell', custom: false },
   { id: 'reverse-pec-deck', name: 'Reverse Pec Deck', apiName: 'reverse pec deck fly', muscleGroup: 'shoulders', equipment: 'machine', custom: false },
+  { id: 'shoulder-press-machine', name: 'Shoulder Press Machine', apiName: 'shoulder press machine', muscleGroup: 'shoulders', equipment: 'machine', custom: false },
+  { id: 'lateral-raise-machine', name: 'Lateral Raise Machine', apiName: 'lateral raise machine', muscleGroup: 'shoulders', equipment: 'machine', custom: false },
+  { id: 'cable-front-raise', name: 'Cable Front Raise', apiName: 'cable front raise', muscleGroup: 'shoulders', equipment: 'cable', custom: false },
+  { id: 'db-upright-row', name: 'DB Upright Row', apiName: 'dumbbell upright row', muscleGroup: 'shoulders', equipment: 'dumbbell', custom: false },
 
   // Biceps
   { id: 'barbell-curl', name: 'Barbell Curl', apiName: 'barbell curl', muscleGroup: 'biceps', equipment: 'barbell', custom: false },
@@ -61,6 +80,10 @@ export const EXERCISES = [
   { id: 'preacher-curl', name: 'Preacher Curl', apiName: 'barbell preacher curl', muscleGroup: 'biceps', equipment: 'barbell', custom: false },
   { id: 'spider-curl', name: 'Spider Curl', apiName: 'spider curl', muscleGroup: 'biceps', equipment: 'barbell', custom: false },
   { id: 'reverse-curl', name: 'Reverse Curl', apiName: 'barbell reverse curl', muscleGroup: 'biceps', equipment: 'barbell', custom: false },
+  { id: 'bicep-curl-machine', name: 'Bicep Curl Machine', apiName: 'bicep curl machine', muscleGroup: 'biceps', equipment: 'machine', custom: false },
+  { id: 'preacher-curl-machine', name: 'Preacher Curl Machine', apiName: 'preacher curl machine', muscleGroup: 'biceps', equipment: 'machine', custom: false },
+  { id: 'bayesian-curl', name: 'Bayesian Curl', apiName: 'bayesian curl', muscleGroup: 'biceps', equipment: 'cable', custom: false },
+  { id: 'zottman-curl', name: 'Zottman Curl', apiName: 'zottman curl', muscleGroup: 'biceps', equipment: 'dumbbell', custom: false },
 
   // Triceps
   { id: 'tricep-pushdown', name: 'Tricep Pushdown', apiName: 'cable triceps pushdown', muscleGroup: 'triceps', equipment: 'cable', custom: false },
@@ -72,6 +95,10 @@ export const EXERCISES = [
   { id: 'dips', name: 'Dips', apiName: 'triceps dips', muscleGroup: 'triceps', equipment: 'bodyweight', custom: false },
   { id: 'tricep-kickback', name: 'Tricep Kickback', apiName: 'dumbbell triceps kickback', muscleGroup: 'triceps', equipment: 'dumbbell', custom: false },
   { id: 'diamond-push-up', name: 'Diamond Push Up', apiName: 'diamond push-up', muscleGroup: 'triceps', equipment: 'bodyweight', custom: false },
+  { id: 'tricep-extension-machine', name: 'Tricep Extension Machine', apiName: 'tricep extension machine', muscleGroup: 'triceps', equipment: 'machine', custom: false },
+  { id: 'assisted-dip-machine-tricep', name: 'Assisted Dip Machine', apiName: 'assisted dip machine', muscleGroup: 'triceps', equipment: 'machine', custom: false },
+  { id: 'bench-dip', name: 'Bench Dip', apiName: 'bench dip', muscleGroup: 'triceps', equipment: 'bodyweight', custom: false },
+  { id: 'jm-press', name: 'JM Press', apiName: 'jm press', muscleGroup: 'triceps', equipment: 'barbell', custom: false },
 
   // Legs
   { id: 'squat', name: 'Squat', apiName: 'barbell squat', muscleGroup: 'legs', equipment: 'barbell', custom: false },
@@ -95,6 +122,24 @@ export const EXERCISES = [
   { id: 'adductor', name: 'Adductor Machine', apiName: 'adductor', muscleGroup: 'legs', equipment: 'machine', custom: false },
   { id: 'abductor', name: 'Abductor Machine', apiName: 'abductor', muscleGroup: 'legs', equipment: 'machine', custom: false },
   { id: 'step-up', name: 'Step Up', apiName: 'dumbbell step up', muscleGroup: 'legs', equipment: 'dumbbell', custom: false },
+  { id: 'pendulum-squat', name: 'Pendulum Squat', apiName: 'pendulum squat', muscleGroup: 'legs', equipment: 'machine', custom: false },
+  { id: 'single-leg-press', name: 'Single Leg Press', apiName: 'single leg press', muscleGroup: 'legs', equipment: 'machine', custom: false },
+  { id: 'glute-kickback-machine', name: 'Glute Kickback Machine', apiName: 'glute kickback machine', muscleGroup: 'legs', equipment: 'machine', custom: false },
+  { id: 'hip-abductor-machine', name: 'Hip Abductor Machine', apiName: 'hip abductor machine', muscleGroup: 'legs', equipment: 'machine', custom: false },
+  { id: 'hip-adductor-machine', name: 'Hip Adductor Machine', apiName: 'hip adductor machine', muscleGroup: 'legs', equipment: 'machine', custom: false },
+  { id: 'smith-hip-thrust', name: 'Smith Hip Thrust', apiName: 'smith machine hip thrust', muscleGroup: 'legs', equipment: 'machine', custom: false },
+  { id: 'leg-press-calf-raise', name: 'Leg Press Calf Raise', apiName: 'leg press calf raise', muscleGroup: 'legs', equipment: 'machine', custom: false },
+  { id: 'donkey-calf-raise', name: 'Donkey Calf Raise', apiName: 'donkey calf raise', muscleGroup: 'legs', equipment: 'machine', custom: false },
+  { id: 'nordic-curl', name: 'Nordic Curl', apiName: 'nordic curl', muscleGroup: 'legs', equipment: 'bodyweight', custom: false },
+  { id: 'single-leg-rdl', name: 'Single Leg RDL', apiName: 'single leg romanian deadlift', muscleGroup: 'legs', equipment: 'dumbbell', custom: false },
+  { id: 'box-squat', name: 'Box Squat', apiName: 'box squat', muscleGroup: 'legs', equipment: 'barbell', custom: false },
+  { id: 'pause-squat', name: 'Pause Squat', apiName: 'pause squat', muscleGroup: 'legs', equipment: 'barbell', custom: false },
+  { id: 'sissy-squat', name: 'Sissy Squat', apiName: 'sissy squat', muscleGroup: 'legs', equipment: 'bodyweight', custom: false },
+  { id: 'reverse-lunge', name: 'Reverse Lunge', apiName: 'reverse lunge', muscleGroup: 'legs', equipment: 'bodyweight', custom: false },
+  { id: 'curtsy-lunge', name: 'Curtsy Lunge', apiName: 'curtsy lunge', muscleGroup: 'legs', equipment: 'bodyweight', custom: false },
+  { id: 'stiff-leg-deadlift', name: 'Stiff Leg Deadlift', apiName: 'stiff leg deadlift', muscleGroup: 'legs', equipment: 'barbell', custom: false },
+  { id: 'cable-glute-kickback', name: 'Cable Glute Kickback', apiName: 'cable glute kickback', muscleGroup: 'legs', equipment: 'cable', custom: false },
+  { id: 'cable-hip-abduction', name: 'Cable Hip Abduction', apiName: 'cable hip abduction', muscleGroup: 'legs', equipment: 'cable', custom: false },
 
   // Core
   { id: 'plank', name: 'Plank', apiName: 'plank', muscleGroup: 'core', equipment: 'bodyweight', custom: false },
@@ -111,6 +156,14 @@ export const EXERCISES = [
   { id: 'dead-bug', name: 'Dead Bug', apiName: 'dead bug', muscleGroup: 'core', equipment: 'bodyweight', custom: false },
   { id: 'bicycle-crunch', name: 'Bicycle Crunch', apiName: 'bicycle crunch', muscleGroup: 'core', equipment: 'bodyweight', custom: false },
   { id: 'hollow-hold', name: 'Hollow Hold', apiName: 'hollow hold', muscleGroup: 'core', equipment: 'bodyweight', custom: false },
+  { id: 'ab-crunch-machine', name: 'Ab Crunch Machine', apiName: 'ab crunch machine', muscleGroup: 'core', equipment: 'machine', custom: false },
+  { id: 'rotary-torso-machine', name: 'Rotary Torso Machine', apiName: 'rotary torso', muscleGroup: 'core', equipment: 'machine', custom: false },
+  { id: 'ghd-sit-up', name: 'GHD Sit Up', apiName: 'ghd sit-up', muscleGroup: 'core', equipment: 'machine', custom: false },
+  { id: 'dragon-flag', name: 'Dragon Flag', apiName: 'dragon flag', muscleGroup: 'core', equipment: 'bodyweight', custom: false },
+  { id: 'v-up', name: 'V-Up', apiName: 'v-up', muscleGroup: 'core', equipment: 'bodyweight', custom: false },
+  { id: 'toe-touch', name: 'Toe Touch', apiName: 'toe touch', muscleGroup: 'core', equipment: 'bodyweight', custom: false },
+  { id: 'weighted-crunch', name: 'Weighted Crunch', apiName: 'weighted crunch', muscleGroup: 'core', equipment: 'dumbbell', custom: false },
+  { id: 'landmine-rotation', name: 'Landmine Rotation', apiName: 'landmine rotation', muscleGroup: 'core', equipment: 'barbell', custom: false },
 ];
 
 export const MUSCLE_COLORS = {
