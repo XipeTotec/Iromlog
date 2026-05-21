@@ -55,16 +55,18 @@ export default function Stats() {
   const { theme, toggle: toggleTheme } = useTheme();
 
   const [shortcode, setShortcode] = useState(() => localStorage.getItem('il_shortcode') || '');
+  const [pat, setPat] = useState(() => localStorage.getItem('il_github_pat') || '');
+  const [showPat, setShowPat] = useState(() => !localStorage.getItem('il_github_pat'));
   const [backupStatus, setBackupStatus] = useState('');
   const [backupLoading, setBackupLoading] = useState(false);
 
   const REPO = 'xipetotec/iromlog';
 
   async function handleBackup() {
-    const pat = localStorage.getItem('il_github_pat');
     const code = localStorage.getItem('il_shortcode');
-    if (!pat) { setBackupStatus('✗ No PAT — restore first to load credentials'); return; }
+    if (!pat) { setBackupStatus('✗ Enter your GitHub PAT'); return; }
     if (!code) { setBackupStatus('✗ Enter a short code first'); return; }
+    localStorage.setItem('il_github_pat', pat);
 
     const data = {};
     ['il_exercises','il_templates','il_sessions','il_prs','il_body_stats','il_settings','il_cardio'].forEach(k => {
@@ -515,18 +517,33 @@ export default function Stats() {
           </div>
 
           <div className="pt-2 border-t border-border">
-            <label className="text-xs font-body text-muted uppercase tracking-wider block mb-1">Data Backup</label>
-            <p className="text-xs font-body text-muted/60 mb-2">Enter your short code to restore on any device — no password needed.</p>
+            <div className="flex items-center justify-between mb-1">
+              <label className="text-xs font-body text-muted uppercase tracking-wider">Data Backup</label>
+              {!showPat && (
+                <button onClick={() => setShowPat(true)} className="text-xs font-body text-muted/50 hover:text-muted transition-colors">
+                  change PAT
+                </button>
+              )}
+            </div>
             <input
               type="text"
               value={shortcode}
               onChange={e => { const v = e.target.value.toLowerCase().replace(/[^a-z0-9]/g, ''); setShortcode(v); localStorage.setItem('il_shortcode', v); }}
-              placeholder="your-code (e.g. lachlan)"
+              placeholder="short code (e.g. lachlan)"
               className="w-full bg-surface2 border border-border rounded px-3 py-2 text-sm font-mono text-fg mb-2 focus:outline-none focus:border-accent placeholder-muted/40"
             />
+            {showPat && (
+              <input
+                type="password"
+                value={pat}
+                onChange={e => setPat(e.target.value)}
+                placeholder="GitHub Personal Access Token"
+                className="w-full bg-surface2 border border-border rounded px-3 py-2 text-sm font-mono text-fg mb-2 focus:outline-none focus:border-accent placeholder-muted/40"
+              />
+            )}
             <div className="flex gap-2">
               <button
-                onClick={async () => { setBackupLoading(true); setBackupStatus(''); await handleBackup(); setBackupLoading(false); }}
+                onClick={async () => { setBackupLoading(true); setBackupStatus(''); await handleBackup(); setShowPat(false); setBackupLoading(false); }}
                 disabled={backupLoading || !shortcode}
                 className="flex-1 border border-border rounded py-2 font-heading text-sm tracking-wider text-muted hover:text-fg hover:border-white transition-colors disabled:opacity-40"
               >
