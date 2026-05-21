@@ -67,6 +67,7 @@ export default function Stats() {
       const v = localStorage.getItem(k);
       if (v) data[k] = JSON.parse(v);
     });
+    if (pat) data['il_github_pat'] = pat;
 
     const content = btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2))));
     const REPO = 'xipetotec/iromlog';
@@ -107,7 +108,10 @@ export default function Stats() {
     if (!res.ok) { alert('No backup found'); return; }
     const j = await res.json();
     const data = JSON.parse(decodeURIComponent(escape(atob(j.content.replace(/\n/g,'')))));
-    Object.entries(data).forEach(([k, v]) => localStorage.setItem(k, JSON.stringify(v)));
+    Object.entries(data).forEach(([k, v]) => {
+      if (k === 'il_github_pat') localStorage.setItem(k, v);
+      else localStorage.setItem(k, JSON.stringify(v));
+    });
     alert('Restored! Reloading…');
     window.location.reload();
   }
