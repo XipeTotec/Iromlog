@@ -157,6 +157,12 @@ export default function ActiveWorkout() {
         );
         setPrToast({ show: true, exerciseName: ex.exercise?.name || ex.exerciseId, fields });
         if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+        setTimeout(() => {
+          setExercises(prev => prev.map((e, i) => {
+            if (i !== exIdx) return e;
+            return { ...e, sets: e.sets.map((s, j) => j === setIdx ? { ...s, isPR: false } : s) };
+          }));
+        }, 3000);
       }
       restTimer.start(restDuration);
     }
@@ -515,7 +521,7 @@ export default function ActiveWorkout() {
                           <Check size={16} />
                         </button>
                         {set.isPR && (
-                          <div className="absolute -top-1 -right-1 w-4 h-4 bg-yellow-400 rounded-full flex items-center justify-center">
+                          <div className="absolute -top-1 -right-1 w-4 h-4 bg-yellow-400 rounded-full flex items-center justify-center animate-fadeOut">
                             <span className="text-black text-xs leading-none font-bold">P</span>
                           </div>
                         )}

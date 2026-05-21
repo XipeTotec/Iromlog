@@ -21,6 +21,12 @@ export default {
         body: ['"DM Sans"', 'sans-serif'],
       },
       borderRadius: { DEFAULT: '2px', sm: '1px', md: '2px', lg: '4px' },
+      keyframes: {
+        fadeOut: { '0%': { opacity: '1' }, '60%': { opacity: '1' }, '100%': { opacity: '0' } },
+      },
+      animation: {
+        fadeOut: 'fadeOut 3s ease-in forwards',
+      },
     },
   },
   plugins: [],
