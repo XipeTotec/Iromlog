@@ -399,10 +399,12 @@ export default function ActiveWorkout() {
               {/* Sets */}
               <div className="px-3 py-2 space-y-2">
                 {/* Column headers */}
-                <div className="flex items-center gap-2 mb-1">
-                  <div className="w-7 text-xs text-muted font-mono text-center">#</div>
-                  <div className="flex-1 text-xs text-muted font-body text-center">KG</div>
-                  <div className="flex-1 text-xs text-muted font-body text-center">REPS</div>
+                <div className="flex items-center gap-3 mb-1">
+                  <div className="w-6" />
+                  <div className="w-20 text-xs text-muted font-body text-center">KG</div>
+                  <div className="w-4" />
+                  <div className="w-14 text-xs text-muted font-body text-center">REPS</div>
+                  <div className="flex-1" />
                   <div className="w-11" />
                 </div>
 
@@ -410,8 +412,8 @@ export default function ActiveWorkout() {
                   const actualIdx = ex.sets.indexOf(set);
                   const prevWarmup = ex.prevSets?.filter(s => s.isWarmup)[warmupSets.indexOf(set)];
                   return (
-                    <div key={set.id} className="flex items-center gap-2">
-                      <div className="w-7 flex items-center justify-center">
+                    <div key={set.id} className="flex items-center gap-3">
+                      <div className="w-6 flex items-center justify-center">
                         <span className="text-xs font-mono text-muted bg-surface2 rounded px-1">W</span>
                       </div>
                       <input
@@ -419,15 +421,17 @@ export default function ActiveWorkout() {
                         value={set.weight}
                         onChange={e => handleSetChange(exIdx, actualIdx, 'weight', e.target.value)}
                         placeholder={prevWarmup ? String(prevWarmup.weight) : '—'}
-                        className="flex-1 bg-surface2 border border-border rounded px-2 py-3 text-center font-mono text-base text-muted focus:outline-none focus:border-accent placeholder-muted/40"
+                        className="w-20 bg-surface2 border border-border rounded px-2 py-3 text-center font-mono text-base text-muted focus:outline-none focus:border-accent placeholder-muted/40"
                       />
+                      <span className="w-4 text-center text-xs text-muted">×</span>
                       <input
                         type="number"
                         value={set.reps}
                         onChange={e => handleSetChange(exIdx, actualIdx, 'reps', e.target.value)}
                         placeholder={prevWarmup ? String(prevWarmup.reps) : '—'}
-                        className="flex-1 bg-surface2 border border-border rounded px-2 py-3 text-center font-mono text-base text-muted focus:outline-none focus:border-accent placeholder-muted/40"
+                        className="w-14 bg-surface2 border border-border rounded px-2 py-3 text-center font-mono text-base text-muted focus:outline-none focus:border-accent placeholder-muted/40"
                       />
+                      <div className="flex-1" />
                       <button
                         onClick={() => handleSetDone(exIdx, actualIdx)}
                         className={`w-11 h-11 rounded flex items-center justify-center border transition-colors ${
@@ -444,9 +448,9 @@ export default function ActiveWorkout() {
                   const actualIdx = ex.sets.indexOf(set);
                   const prev = ex.prevSets?.filter(s => !s.isWarmup)[wIdx];
                   return (
-                    <div key={set.id} className="flex items-center gap-2">
-                      <div className="w-7 flex items-center justify-center">
-                        <span className={`text-xs font-mono ${set.done ? 'text-accent' : 'text-muted'}`}>
+                    <div key={set.id} className="flex items-center gap-3">
+                      <div className="w-6 flex items-center justify-center">
+                        <span className={`text-sm font-mono ${set.done ? 'text-accent' : 'text-muted'}`}>
                           {set.setNumber}
                         </span>
                       </div>
@@ -455,19 +459,21 @@ export default function ActiveWorkout() {
                         value={set.weight}
                         onChange={e => handleSetChange(exIdx, actualIdx, 'weight', e.target.value)}
                         placeholder={prev ? String(prev.weight) : '0'}
-                        className={`flex-1 border rounded px-2 py-3 text-center font-mono text-base focus:outline-none focus:border-accent ${
+                        className={`w-20 border rounded px-2 py-3 text-center font-mono text-base focus:outline-none focus:border-accent ${
                           set.done ? 'bg-accent/10 border-accent/30 text-accent' : 'bg-surface2 border-border text-fg'
                         }`}
                       />
+                      <span className="w-4 text-center text-xs text-muted">×</span>
                       <input
                         type="number"
                         value={set.reps}
                         onChange={e => handleSetChange(exIdx, actualIdx, 'reps', e.target.value)}
                         placeholder={prev ? String(prev.reps) : '0'}
-                        className={`flex-1 border rounded px-2 py-3 text-center font-mono text-base focus:outline-none focus:border-accent ${
+                        className={`w-14 border rounded px-2 py-3 text-center font-mono text-base focus:outline-none focus:border-accent ${
                           set.done ? 'bg-accent/10 border-accent/30 text-accent' : 'bg-surface2 border-border text-fg'
                         }`}
                       />
+                      <div className="flex-1" />
                       <div className="relative w-11">
                         <button
                           onClick={() => handleSetDone(exIdx, actualIdx)}
