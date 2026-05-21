@@ -54,6 +54,64 @@ export default function Stats() {
   const [dbLoading, setDbLoading] = useState(false);
   const { theme, toggle: toggleTheme } = useTheme();
 
+  const [githubPat, setGithubPat] = useState(() => localStorage.getItem('il_github_pat') || '');
+  const [backupStatus, setBackupStatus] = useState('');
+  const [backupLoading, setBackupLoading] = useState(false);
+
+  async function handleBackup() {
+    const pat = localStorage.getItem('il_github_pat');
+    if (!pat) { alert('Enter a GitHub PAT first'); return; }
+
+    const data = {};
+    ['il_exercises','il_templates','il_sessions','il_prs','il_body_stats','il_settings','il_cardio'].forEach(k => {
+      const v = localStorage.getItem(k);
+      if (v) data[k] = JSON.parse(v);
+    });
+
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2))));
+    const REPO = 'xipetotec/iromlog';
+    const PATH = 'backup/data.json';
+
+    let sha;
+    try {
+      const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${PATH}`, {
+        headers: { Authorization: `Bearer ${pat}`, Accept: 'application/vnd.github.v3+json' }
+      });
+      if (res.ok) { const j = await res.json(); sha = j.sha; }
+    } catch {}
+
+    const body = { message: `Backup ${new Date().toISOString()}`, content };
+    if (sha) body.sha = sha;
+
+    const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${PATH}`, {
+      method: 'PUT',
+      headers: { Authorization: `Bearer ${pat}`, Accept: 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+
+    if (res.ok) { setBackupStatus('✓ Backed up'); }
+    else { setBackupStatus('✗ Failed'); }
+  }
+
+  async function handleRestore() {
+    const pat = localStorage.getItem('il_github_pat');
+    if (!pat) { alert('Enter a GitHub PAT first'); return; }
+    if (!confirm('This will overwrite all local data. Continue?')) return;
+
+    const REPO = 'xipetotec/iromlog';
+    const PATH = 'backup/data.json';
+
+    const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${PATH}`, {
+      headers: { Authorization: `Bearer ${pat}`, Accept: 'application/vnd.github.v3+json' }
+    });
+    if (!res.ok) { alert('No backup found'); return; }
+    const j = await res.json();
+    const data = JSON.parse(decodeURIComponent(escape(atob(j.content.replace(/\n/g,'')))));
+    Object.entries(data).forEach(([k, v]) => localStorage.setItem(k, JSON.stringify(v)));
+    alert('Restored! Reloading…');
+    window.location.reload();
+  }
+
   useEffect(() => {
     setSessions(getSessions());
     setExercises(getExercises());
@@ -450,6 +508,34 @@ export default function Stats() {
             >
               <RefreshCw size={15} /> HARD RELOAD
             </button>
+          </div>
+
+          <div className="pt-2 border-t border-border">
+            <label className="text-xs font-body text-muted uppercase tracking-wider block mb-2">Data Backup</label>
+            <input
+              type="password"
+              value={githubPat}
+              onChange={e => { setGithubPat(e.target.value); localStorage.setItem('il_github_pat', e.target.value); }}
+              placeholder="GitHub Personal Access Token"
+              className="w-full bg-surface2 border border-border rounded px-3 py-2 text-sm font-mono text-fg mb-2 focus:outline-none focus:border-accent placeholder-muted/40"
+            />
+            <div className="flex gap-2">
+              <button
+                onClick={async () => { setBackupLoading(true); setBackupStatus(''); await handleBackup(); setBackupLoading(false); }}
+                disabled={backupLoading || !githubPat}
+                className="flex-1 border border-border rounded py-2 font-heading text-sm tracking-wider text-muted hover:text-fg hover:border-white transition-colors disabled:opacity-40"
+              >
+                {backupLoading ? 'SAVING…' : 'BACKUP NOW'}
+              </button>
+              <button
+                onClick={handleRestore}
+                disabled={backupLoading || !githubPat}
+                className="flex-1 border border-border rounded py-2 font-heading text-sm tracking-wider text-muted hover:text-fg hover:border-white transition-colors disabled:opacity-40"
+              >
+                RESTORE
+              </button>
+            </div>
+            {backupStatus && <div className="text-xs font-mono text-accent mt-1">{backupStatus}</div>}
           </div>
         </div>
       </div>

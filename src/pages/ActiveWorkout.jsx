@@ -55,6 +55,7 @@ export default function ActiveWorkout() {
       exercise: ex.exercise,
       sets: buildInitialSets(ex.defaultSets, ex.defaultReps, ex.prevSets || []),
       prevSets: ex.prevSets || [],
+      notes: '',
     }));
   });
 
@@ -212,6 +213,7 @@ export default function ActiveWorkout() {
     const totalDuration = stopwatch.seconds;
     const sessionExercises = exercises.map(ex => ({
       exerciseId: ex.exerciseId,
+      notes: ex.notes || '',
       sets: ex.sets.map(s => ({
         weight: parseFloat(s.weight) || 0,
         reps: parseInt(s.reps) || 0,
@@ -295,6 +297,35 @@ export default function ActiveWorkout() {
     setReorderIdx(null);
   }
 
+  function handleExerciseNoteChange(exIdx, value) {
+    setExercises(prev => prev.map((ex, i) => i !== exIdx ? ex : { ...ex, notes: value }));
+  }
+
+  function handleToggleSuperset(exIdx) {
+    setExercises(prev => {
+      const next = prev.map(ex => ({ ...ex }));
+      const ex = next[exIdx];
+      if (ex.supersetGroup) {
+        // Remove supersetGroup from current exercise
+        const groupId = ex.supersetGroup;
+        delete next[exIdx].supersetGroup;
+        // Check remaining members of the group
+        const remaining = next.filter(e => e.supersetGroup === groupId);
+        if (remaining.length === 1) {
+          // Only one left – remove from that one too
+          remaining.forEach(e => delete e.supersetGroup);
+        }
+      } else {
+        // Pair current and next exercise
+        if (!next[exIdx + 1]) return prev;
+        const groupId = `ss-${Date.now()}`;
+        next[exIdx].supersetGroup = groupId;
+        next[exIdx + 1].supersetGroup = groupId;
+      }
+      return next;
+    });
+  }
+
   function moveExercise(exIdx, dir) {
     const target = exIdx + dir;
     setExercises(prev => {
@@ -334,6 +365,7 @@ export default function ActiveWorkout() {
           isPR: false,
         }],
         prevSets: [],
+        notes: '',
       },
     ]);
     setShowAddExercise(false);
@@ -392,11 +424,23 @@ export default function ActiveWorkout() {
 
           const po = getPoSuggestion(ex.prevSets);
 
+          // Superset grouping
+          const prevEx = exercises[exIdx - 1];
+          const isInSuperset = !!ex.supersetGroup;
+          const isContinuingSuperset = isInSuperset && prevEx && prevEx.supersetGroup === ex.supersetGroup;
+          const borderColor = isInSuperset ? '#e8ff47' : muscleColor;
+
           return (
+            <React.Fragment key={exIdx}>
+            {isContinuingSuperset && (
+              <div className="flex items-center gap-2 px-3 -my-2">
+                <div className="w-px h-4 bg-accent/40 ml-3"></div>
+                <span className="text-xs font-heading text-accent/60 tracking-widest">SUPERSET</span>
+              </div>
+            )}
             <div
-              key={exIdx}
               className="bg-surface border border-border rounded-lg overflow-hidden"
-              style={{ borderLeft: `3px solid ${muscleColor}` }}
+              style={{ borderLeft: `3px solid ${borderColor}` }}
             >
               {/* Exercise header */}
               <div className="px-3 py-2.5 flex items-center gap-2 border-b border-border">
@@ -412,6 +456,13 @@ export default function ActiveWorkout() {
                       disabled={exIdx === exercises.length - 1}
                       className="w-7 h-7 flex items-center justify-center rounded text-muted hover:text-accent disabled:opacity-20 transition-colors"
                     ><ChevronDown size={16} /></button>
+                    <button
+                      onClick={() => handleToggleSuperset(exIdx)}
+                      disabled={!exercises[exIdx + 1] && !ex.supersetGroup}
+                      className="px-2 h-7 flex items-center rounded text-xs font-heading tracking-wider transition-colors disabled:opacity-20 text-muted hover:text-accent"
+                    >
+                      {ex.supersetGroup ? 'UNLINK' : 'PAIR ↓'}
+                    </button>
                     <button
                       onClick={() => setReorderIdx(null)}
                       className="w-7 h-7 flex items-center justify-center rounded text-muted hover:text-fg transition-colors"
@@ -568,6 +619,15 @@ export default function ActiveWorkout() {
                 })}
               </div>
 
+              {/* Notes */}
+              <textarea
+                rows={2}
+                value={ex.notes || ''}
+                onChange={e => handleExerciseNoteChange(exIdx, e.target.value)}
+                placeholder="Notes…"
+                className="text-sm font-body text-fg bg-transparent border-0 border-t border-border w-full px-3 py-2 resize-none focus:outline-none placeholder-muted/40 focus:border-accent"
+              />
+
               {/* Add set buttons */}
               <div className="px-3 pb-3 flex gap-2">
                 <button
@@ -584,6 +644,7 @@ export default function ActiveWorkout() {
                 </button>
               </div>
             </div>
+            </React.Fragment>
           );
         })}
       </div>
