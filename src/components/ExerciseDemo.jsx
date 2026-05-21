@@ -5,7 +5,7 @@ export default function ExerciseDemo({ url, url2, alt }) {
 
   useEffect(() => {
     if (!url2) return;
-    const id = setInterval(() => setFrame(f => 1 - f), 700);
+    const id = setInterval(() => setFrame(f => 1 - f), 500);
     return () => clearInterval(id);
   }, [url2]);
 
