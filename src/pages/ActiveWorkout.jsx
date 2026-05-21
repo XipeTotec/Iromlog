@@ -286,6 +286,18 @@ export default function ActiveWorkout() {
     setExercises(prev => prev.filter((_, i) => i !== exIdx));
   }
 
+  function handleDeleteSet(exIdx, setIdx) {
+    setExercises(prev => prev.map((ex, i) => {
+      if (i !== exIdx) return ex;
+      const next = ex.sets.filter((_, j) => j !== setIdx);
+      let wNum = 0;
+      return {
+        ...ex,
+        sets: next.map(s => s.isWarmup ? s : { ...s, setNumber: ++wNum }),
+      };
+    }));
+  }
+
   function handleAddExercise(exercise) {
     setExercises(prev => [
       ...prev,
@@ -495,6 +507,10 @@ export default function ActiveWorkout() {
                           className={`shrink-0 w-6 h-11 flex items-center justify-center border rounded text-lg select-none touch-none transition-colors ${doneCls}`}>+</button>
                       </div>
                       <div className="flex-1" />
+                      <button onClick={() => handleDeleteSet(exIdx, actualIdx)}
+                        className="shrink-0 w-6 h-6 flex items-center justify-center text-muted hover:text-accent transition-colors">
+                        <X size={12} />
+                      </button>
                       <div className="relative w-11">
                         <button onClick={() => handleSetDone(exIdx, actualIdx)}
                           className={`w-11 h-11 rounded flex items-center justify-center border transition-colors ${
