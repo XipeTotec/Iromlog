@@ -1229,14 +1229,19 @@
           "defaultReps": 10
         },
         {
-          "exerciseId": "db-shoulder-press",
+          "exerciseId": "chest-press-machine",
           "defaultSets": 3,
           "defaultReps": 10
         },
         {
-          "exerciseId": "cable-lateral-raise",
+          "exerciseId": "shoulder-press-machine",
           "defaultSets": 3,
-          "defaultReps": 15
+          "defaultReps": 10
+        },
+        {
+          "exerciseId": "lateral-raise",
+          "defaultSets": 3,
+          "defaultReps": 10
         },
         {
           "exerciseId": "tricep-pushdown",
@@ -1244,9 +1249,9 @@
           "defaultReps": 12
         },
         {
-          "exerciseId": "overhead-extension",
+          "exerciseId": "skull-crusher",
           "defaultSets": 3,
-          "defaultReps": 12
+          "defaultReps": 10
         }
       ]
     },
@@ -1418,12 +1423,187 @@
   ],
   "il_sessions": [
     {
+      "id": "session-1779378885798",
+      "templateId": "push-a",
+      "templateName": "Push",
+      "type": "push",
+      "date": "2026-05-18T22:00:00.000Z",
+      "durationSeconds": 4500,
+      "totalSets": 18,
+      "totalVolume": 3590,
+      "exercises": [
+        {
+          "exerciseId": "chest-press-machine",
+          "notes": "",
+          "sets": [
+            {
+              "weight": 25,
+              "reps": 10,
+              "done": true,
+              "isWarmup": false,
+              "isPR": false
+            },
+            {
+              "weight": 25,
+              "reps": 10,
+              "done": true,
+              "isWarmup": false,
+              "isPR": false
+            },
+            {
+              "weight": 30,
+              "reps": 10,
+              "done": true,
+              "isWarmup": false,
+              "isPR": false
+            }
+          ]
+        },
+        {
+          "exerciseId": "cable-fly",
+          "notes": "",
+          "sets": [
+            {
+              "weight": 20,
+              "reps": 10,
+              "done": true,
+              "isWarmup": false,
+              "isPR": false
+            },
+            {
+              "weight": 20,
+              "reps": 11,
+              "done": true,
+              "isWarmup": false,
+              "isPR": false
+            },
+            {
+              "weight": 20,
+              "reps": 10,
+              "done": true,
+              "isWarmup": false,
+              "isPR": false
+            }
+          ]
+        },
+        {
+          "exerciseId": "shoulder-press-machine",
+          "notes": "",
+          "sets": [
+            {
+              "weight": 15,
+              "reps": 10,
+              "done": true,
+              "isWarmup": false,
+              "isPR": false
+            },
+            {
+              "weight": 15,
+              "reps": 10,
+              "done": true,
+              "isWarmup": false,
+              "isPR": false
+            },
+            {
+              "weight": 15,
+              "reps": 14,
+              "done": true,
+              "isWarmup": false,
+              "isPR": false
+            }
+          ]
+        },
+        {
+          "exerciseId": "incline-bench-press",
+          "notes": "",
+          "sets": [
+            {
+              "weight": 10,
+              "reps": 11,
+              "done": true,
+              "isWarmup": false,
+              "isPR": false
+            },
+            {
+              "weight": 20,
+              "reps": 8,
+              "done": true,
+              "isWarmup": false,
+              "isPR": false
+            },
+            {
+              "weight": 20,
+              "reps": 8,
+              "done": true,
+              "isWarmup": false,
+              "isPR": false
+            }
+          ]
+        },
+        {
+          "exerciseId": "tricep-pushdown",
+          "notes": "",
+          "sets": [
+            {
+              "weight": 20,
+              "reps": 15,
+              "done": true,
+              "isWarmup": false,
+              "isPR": false
+            },
+            {
+              "weight": 20,
+              "reps": 16,
+              "done": true,
+              "isWarmup": false,
+              "isPR": false
+            },
+            {
+              "weight": 20,
+              "reps": 15,
+              "done": true,
+              "isWarmup": false,
+              "isPR": false
+            }
+          ]
+        },
+        {
+          "exerciseId": "skull-crusher",
+          "notes": "",
+          "sets": [
+            {
+              "weight": 10,
+              "reps": 10,
+              "done": true,
+              "isWarmup": false,
+              "isPR": false
+            },
+            {
+              "weight": 10,
+              "reps": 10,
+              "done": true,
+              "isWarmup": false,
+              "isPR": false
+            },
+            {
+              "weight": 10,
+              "reps": 11,
+              "done": true,
+              "isWarmup": false,
+              "isPR": false
+            }
+          ]
+        }
+      ],
+      "prs": []
+    },
+    {
       "id": "session-1779377666713",
       "templateId": "pull",
       "templateName": "Pull",
       "type": "pull",
-      "date": "2026-05-21T15:34:26.713Z",
-      "durationSeconds": 43,
+      "date": "2026-05-20T22:30:00.000Z",
+      "durationSeconds": 5400,
       "totalSets": 12,
       "totalVolume": 3145,
       "exercises": [
@@ -1588,6 +1768,42 @@
       "maxReps": 10,
       "maxVolume": 100,
       "date": "2026-05-21T15:34:25.618Z"
+    },
+    "incline-bench-press": {
+      "maxWeight": 20,
+      "maxReps": 10,
+      "maxVolume": 160,
+      "date": "2026-05-21T15:51:42.018Z"
+    },
+    "tricep-pushdown": {
+      "maxWeight": 20,
+      "maxReps": 15,
+      "maxVolume": 300,
+      "date": "2026-05-21T15:51:53.876Z"
+    },
+    "chest-press-machine": {
+      "maxWeight": 25,
+      "maxReps": 10,
+      "maxVolume": 250,
+      "date": "2026-05-21T15:52:35.642Z"
+    },
+    "shoulder-press-machine": {
+      "maxWeight": 15,
+      "maxReps": 10,
+      "maxVolume": 150,
+      "date": "2026-05-21T15:53:10.960Z"
+    },
+    "skull-crusher": {
+      "maxWeight": 10,
+      "maxReps": 10,
+      "maxVolume": 100,
+      "date": "2026-05-21T15:53:42.164Z"
+    },
+    "cable-fly": {
+      "maxWeight": 20,
+      "maxReps": 10,
+      "maxVolume": 200,
+      "date": "2026-05-21T15:54:29.111Z"
     }
   },
   "il_shortcode": "lachlan"
